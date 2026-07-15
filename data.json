@@ -1,0 +1,176 @@
+{
+  "subjects": [
+    {
+      "id": "pea-plant",
+      "name": "Kacang Ercis (Pisum sativum)",
+      "description": "Organisme model klasik yang digunakan Gregor Mendel dalam penelitian pewarisan sifat.",
+      "baseImage": "🌱",
+      "traits": [
+        {
+          "name": "Bentuk Biji",
+          "defaultSymbols": { "dominant": "R", "recessive": "r" },
+          "options": [
+            { "phenotype": "Bulat", "image": "🟡", "description": "Biji berbentuk bulat halus" },
+            { "phenotype": "Keriput", "image": "🟤", "description": "Biji berbentuk keriput" }
+          ]
+        },
+        {
+          "name": "Warna Biji",
+          "defaultSymbols": { "dominant": "Y", "recessive": "y" },
+          "options": [
+            { "phenotype": "Kuning", "image": "🟡", "description": "Biji berwarna kuning" },
+            { "phenotype": "Hijau", "image": "🟢", "description": "Biji berwarna hijau" }
+          ]
+        },
+        {
+          "name": "Warna Bunga",
+          "defaultSymbols": { "dominant": "P", "recessive": "p" },
+          "options": [
+            { "phenotype": "Ungu", "image": "🟣", "description": "Bunga berwarna ungu" },
+            { "phenotype": "Putih", "image": "⚪", "description": "Bunga berwarna putih" }
+          ]
+        },
+        {
+          "name": "Tinggi Tanaman",
+          "defaultSymbols": { "dominant": "T", "recessive": "t" },
+          "options": [
+            { "phenotype": "Tinggi", "image": "🌿", "description": "Tanaman tinggi" },
+            { "phenotype": "Pendek", "image": "🌱", "description": "Tanaman pendek" }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "guinea-pig",
+      "name": "Marmut (Cavia porcellus)",
+      "description": "Hewan percobaan umum untuk studi genetika sifat fisik.",
+      "baseImage": "🐹",
+      "traits": [
+        {
+          "name": "Warna Rambut",
+          "defaultSymbols": { "dominant": "B", "recessive": "b" },
+          "options": [
+            { "phenotype": "Hitam", "image": "⬛", "description": "Rambut berwarna hitam" },
+            { "phenotype": "Coklat", "image": "🟤", "description": "Rambut berwarna coklat" }
+          ]
+        },
+        {
+          "name": "Tekstur Rambut",
+          "defaultSymbols": { "dominant": "S", "recessive": "s" },
+          "options": [
+            { "phenotype": "Halus", "image": "✨", "description": "Rambut halus" },
+            { "phenotype": "Kasar", "image": "〰️", "description": "Rambut kasar/keriting" }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "fruit-fly",
+      "name": "Lalat Buah (Drosophila melanogaster)",
+      "description": "Organisme model penting dalam genetika modern.",
+      "baseImage": "🪰",
+      "traits": [
+        {
+          "name": "Warna Mata",
+          "defaultSymbols": { "dominant": "R", "recessive": "r" },
+          "options": [
+            { "phenotype": "Merah", "image": "🔴", "description": "Mata berwarna merah" },
+            { "phenotype": "Putih", "image": "⚪", "description": "Mata berwarna putih" }
+          ]
+        },
+        {
+          "name": "Bentuk Sayap",
+          "defaultSymbols": { "dominant": "W", "recessive": "w" },
+          "options": [
+            { "phenotype": "Normal", "image": "🦋", "description": "Sayap normal" },
+            { "phenotype": "Vestigial", "image": "🛡️", "description": "Sayap pendek rudimenter" }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "corn-plant",
+      "name": "Jagung (Zea mays)",
+      "description": "Tanaman model untuk studi genetika tanaman.",
+      "baseImage": "🌽",
+      "traits": [
+        {
+          "name": "Warna Biji",
+          "defaultSymbols": { "dominant": "P", "recessive": "p" },
+          "options": [
+            { "phenotype": "Ungu", "image": "🟣", "description": "Biji berwarna ungu" },
+            { "phenotype": "Kuning", "image": "🟡", "description": "Biji berwarna kuning" }
+          ]
+        },
+        {
+          "name": "Tekstur Biji",
+          "defaultSymbols": { "dominant": "S", "recessive": "s" },
+          "options": [
+            { "phenotype": "Halus", "image": "🟡", "description": "Biji halus (starchy)" },
+            { "phenotype": "Keriput", "image": "🟤", "description": "Biji keriput (sweet)" }
+          ]
+        }
+      ]
+    }
+  ],
+  "tutorials": {
+    "monohybrid": {
+      "title": "Tutorial Monohybrid",
+      "description": "Pelajari pewarisan satu sifat dengan Hukum Mendel I (Segregasi).",
+      "steps": [
+        "Pilih organisme yang ingin dipelajari",
+        "Pilih satu sifat (trait) untuk dipelajari",
+        "Tentukan mana fenotipe yang dominan dan mana yang resesif",
+        "Pilih fenotipe untuk kedua parent (induk)",
+        "Klik 'Mulai Simulasi' untuk membuat tabel Punnett",
+        "Amati hasil genotipe dan fenotipe keturunan",
+        "Klik keturunan untuk membuat generasi berikutnya"
+      ]
+    },
+    "dihybrid": {
+      "title": "Tutorial Dihybrid",
+      "description": "Pelajari pewarisan dua sifat dengan Hukum Mendel II (Asortasi Bebas).",
+      "steps": [
+        "Pilih organisme yang memiliki minimal 2 sifat",
+        "Pilih tepat 2 sifat untuk persilangan dihybrid",
+        "Tentukan fenotipe dominan untuk masing-masing sifat",
+        "Pilih kombinasi fenotipe untuk kedua parent",
+        "Klik 'Mulai Simulasi' untuk membuat tabel Punnett 4×4",
+        "Amati pola 9:3:3:1 pada hasil fenotipe",
+        "Eksperimen dengan berbagai kombinasi parent"
+      ]
+    }
+  },
+  "achievements": [
+    {
+      "id": "first-cross",
+      "name": "Persilangan Pertama",
+      "description": "Menyelesaikan persilangan pertama",
+      "icon": "microscope"
+    },
+    {
+      "id": "monohybrid-master",
+      "name": "Ahli Monohybrid",
+      "description": "5 persilangan monohybrid",
+      "icon": "dna"
+    },
+    {
+      "id": "dihybrid-master",
+      "name": "Ahli Dihybrid",
+      "description": "5 persilangan dihybrid",
+      "icon": "chromosome"
+    },
+    {
+      "id": "generation-3",
+      "name": "Generasi Ke-3",
+      "description": "Mencapai generasi F3",
+      "icon": "family-tree"
+    },
+    {
+      "id": "explorer",
+      "name": "Penjelajah",
+      "description": "Mencoba semua organisme",
+      "icon": "crystal-ball"
+    }
+  ]
+}
