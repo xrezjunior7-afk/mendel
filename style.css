@@ -1,0 +1,3084 @@
+/* ==========================================================================
+   DESIGN TOKENS
+   ========================================================================== */
+:root {
+  /* Warna — diturunkan dari brief: Hijau, Putih, Biru muda, Orange */
+  --color-primary: #2E7D32;       /* hijau daun - aksi utama, teks penting */
+  --color-primary-light: #E4F5E6; /* hijau sangat muda - background aksen */
+  --color-primary-dark: #1B5E20;  /* hijau tua - hover state */
+  --color-bg: #F5FBF6;            /* putih kehijauan - background utama */
+  --color-surface: #FFFFFF;       /* putih murni - card/panel */
+  --color-sky: #8FD3E8;           /* biru muda - aksen sekunder, langit taman */
+  --color-sky-light: #E4F6FB;
+  --color-accent: #FF8A3D;        /* orange - highlight, dominan aktif */
+  --color-accent-dark: #E06F22;
+  --color-text: #1B1B1B;
+  --color-text-muted: #5C6B5E;
+  --color-border: #D9E8DB;
+
+  /* Warna genotipe (Punnett Square & badge) */
+  --color-geno-AA: #2E7D32;
+  --color-geno-Aa: #6FBF73;
+  --color-geno-aa: #C8E6C9;
+
+  /* Tipografi */
+  --font-display: "Baloo 2", "Trebuchet MS", sans-serif;
+  --font-body: "Inter", system-ui, -apple-system, sans-serif;
+
+  /* Layout */
+  --radius-sm: 8px;
+  --radius-md: 14px;
+  --radius-lg: 22px;
+  --radius-full: 999px;
+  --shadow-soft: 0 4px 14px rgba(46, 125, 50, 0.10);
+  --shadow-medium: 0 8px 24px rgba(46, 125, 50, 0.16);
+
+  /* ---- REVISI (UI/UX Polish): token tambahan — SEMUA aditif, token lama di
+     atas tidak diubah namanya/artinya supaya seluruh rule lama tetap valid ---- */
+
+  /* Motion: satu skala durasi + easing yang dipakai konsisten di semua
+     micro-interaction. --transition-base dipertahankan (= normal) karena
+     dipakai puluhan rule lama. */
+  --ease-standard: cubic-bezier(0.4, 0, 0.2, 1);
+  --ease-out: cubic-bezier(0.16, 1, 0.3, 1);
+  --transition-fast: 140ms var(--ease-standard);
+  --transition-normal: 220ms var(--ease-standard);
+  --transition-slow: 420ms var(--ease-out);
+  --transition-base: var(--transition-normal);
+
+  /* Elevasi: skala tipis & tenang (ilmiah, bukan glow) */
+  --shadow-xs: 0 1px 2px rgba(27, 60, 32, 0.08);
+  --shadow-sm: 0 2px 6px rgba(27, 60, 32, 0.08);
+  --shadow-md: 0 6px 18px rgba(27, 60, 32, 0.12);
+  --shadow-lg: 0 14px 34px rgba(27, 60, 32, 0.16);
+  --ring-focus: 0 0 0 3px rgba(255, 138, 61, 0.45);
+
+  /* Skala spasi (4px base) */
+  --space-1: 4px;
+  --space-2: 8px;
+  --space-3: 12px;
+  --space-4: 16px;
+  --space-5: 20px;
+  --space-6: 24px;
+
+  /* Skala tipografi */
+  --text-caption: 0.72rem;
+  --text-small: 0.82rem;
+  --text-body: 0.92rem;
+  --text-lead: 1rem;
+  --text-title: 1.05rem;
+  --font-mono: ui-monospace, "SFMono-Regular", Menlo, Consolas, "Courier New", monospace;
+
+  /* Warna status semantik + teks sekunder */
+  --color-success: #2E7D32;
+  --color-success-bg: #E4F5E6;
+  --color-danger: #B3261E;
+  --color-danger-bg: #FDEBEA;
+  --color-info: #1F6F8B;
+  --color-info-bg: #E4F6FB;
+  --color-surface-muted: #F1F8F2;
+  --color-border-strong: #B9D3BC;
+  --color-disabled-bg: #ECEFEC;
+  --color-disabled-text: #7C857D;
+}
+
+/* ==========================================================================
+   RESET & BASE
+   ========================================================================== */
+*, *::before, *::after { box-sizing: border-box; }
+
+html, body {
+  margin: 0;
+  padding: 0;
+}
+
+body {
+  font-family: var(--font-body);
+  background: var(--color-bg);
+  color: var(--color-text);
+  line-height: 1.5;
+  -webkit-font-smoothing: antialiased;
+}
+
+h1, h2, h3, h4 {
+  font-family: var(--font-display);
+  margin: 0;
+  color: var(--color-primary-dark);
+}
+
+ul, ol { list-style: none; margin: 0; padding: 0; }
+button { font-family: inherit; cursor: pointer; }
+
+:focus-visible {
+  outline: 3px solid var(--color-accent);
+  outline-offset: 2px;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after {
+    animation-duration: 0.01ms !important;
+    transition-duration: 0.01ms !important;
+  }
+}
+
+/* ==========================================================================
+   HEADER
+   ========================================================================== */
+.app-header {
+  padding: 20px 24px 16px;
+  text-align: center;
+  background: linear-gradient(180deg, var(--color-primary-light) 0%, transparent 100%);
+}
+
+.app-header__brand {
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.app-header__icon { font-size: 1.6rem; }
+
+.app-header__title {
+  font-family: var(--font-display);
+  font-weight: 800;
+  font-size: 1.6rem;
+  color: var(--color-primary-dark);
+}
+
+.app-header__tagline {
+  margin: 4px 0 0;
+  color: var(--color-text-muted);
+  font-size: 0.95rem;
+}
+
+/* ==========================================================================
+   BUTTONS
+   ========================================================================== */
+.btn {
+  position: relative;
+  overflow: hidden;
+  border: none;
+  border-radius: var(--radius-full);
+  padding: 12px 22px;
+  font-weight: 600;
+  font-size: 0.95rem;
+  transition: transform var(--transition-base), box-shadow var(--transition-base), opacity var(--transition-base);
+}
+
+.btn--primary {
+  background: var(--color-accent);
+  color: #fff;
+  box-shadow: var(--shadow-soft);
+}
+
+.btn--primary:hover:not(:disabled) {
+  background: var(--color-accent-dark);
+  transform: translateY(-2px);
+  box-shadow: var(--shadow-medium);
+}
+
+.btn--primary:disabled {
+  background: #E0E0E0;
+  color: #9E9E9E;
+  cursor: not-allowed;
+  box-shadow: none;
+}
+
+.btn--ghost {
+  background: transparent;
+  color: var(--color-primary);
+  border: 2px solid var(--color-border);
+}
+
+.btn--ghost:hover {
+  background: var(--color-primary-light);
+  border-color: var(--color-primary);
+}
+
+.btn--cross {
+  font-size: 1.05rem;
+  /* REVISI (Vertical Composition Fix): -2px padding vertikal — kontribusi
+     kecil untuk memadatkan Step 1 (Before Cross) yang berbagi struktur
+     persis dengan Dihibrid, jadi sengaja tidak dipangkas lebih agresif
+     supaya keseimbangan Dihibrid (lihat REVISI di .genotype-pool/.sidebar)
+     tidak ikut bergeser jauh. */
+  padding: 12px 32px;
+}
+
+.cross-hint {
+  margin: 8px 0 0;
+  text-align: center;
+  font-size: 0.75rem;
+  color: var(--color-text-muted);
+}
+/* .cross-hint sudah jadi flex item ter-center (align-items:center pada
+   .garden__cross-action, flex-direction:column) -> cukup tambah chip tanpa
+   perlu display:table/margin:auto */
+.crossing-box .cross-hint {
+  background: rgba(255, 255, 255, 0.75);
+  padding: 3px 12px;
+  border-radius: var(--radius-full);
+}
+
+/* Visually hidden but available to screen readers */
+.sr-only {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  white-space: nowrap;
+  border: 0;
+}
+
+/* ==========================================================================
+   SCREENS
+   ========================================================================== */
+.screen {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 24px;
+}
+
+/* REVISI (Viewport Optimization): layar simulator (bukan layar setup/species
+   yang memang sengaja sempit ala form) dilebarkan secara fluid di desktop
+   besar (1366/1440/1920px) supaya tidak terasa "kosong" dengan margin kiri-
+   kanan raksasa seperti sebelumnya (selalu mentok 1200px). clamp() dipakai
+   sesuai instruksi — bukan angka tetap: viewport ≤ ~1330px tetap 1200px
+   (behavior lama persis, tidak berubah), lalu tumbuh mengikuti 90vw sampai
+   plafon 1440px. Semua panel section lain di bawah .simulator-layout
+   (riwayat, timeline, aktivitas, dst.) sengaja TIDAK punya max-width sendiri
+   lagi (lihat masing-masing) — supaya otomatis ikut lebar ini, tidak ada
+   container yang "tiba-tiba melebar/mengecil" dibanding yang lain. */
+.screen--simulator {
+  max-width: clamp(1200px, 90vw, 1440px);
+}
+
+/* ---- Species selection ---- */
+.species-intro {
+  text-align: center;
+  max-width: 560px;
+  margin: 24px auto 32px;
+}
+
+.species-intro__title {
+  font-size: 1.8rem;
+  margin-bottom: 10px;
+}
+
+.species-intro__desc {
+  color: var(--color-text-muted);
+  max-width: 560px;
+  margin: 0 auto;
+}
+
+/* ==========================================================================
+   SETUP PROGRESS INDICATOR (REVISI: redesign menu)
+   ========================================================================== */
+/* REVISI 1 (Initial Routing): banner opt-in, TIDAK PERNAH tampil otomatis
+   masuk simulator — murni tawaran yang bisa diabaikan. */
+.resume-session-banner {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: 10px;
+  max-width: 640px;
+  margin: 18px auto 0;
+  padding: 12px 18px;
+  background: var(--color-sky-light);
+  border: 2px solid var(--color-sky);
+  border-radius: var(--radius-lg);
+  font-size: 0.85rem;
+  color: var(--color-primary-dark);
+}
+.resume-session-banner[hidden] { display: none; }
+.resume-session-banner__actions { display: flex; gap: 8px; }
+
+.setup-progress {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  max-width: 640px;
+  margin: 20px auto 8px;
+  flex-wrap: wrap;
+}
+.setup-progress__step {
+  font-size: 0.72rem;
+  font-weight: 700;
+  color: var(--color-text-muted);
+  letter-spacing: 0.02em;
+}
+.setup-progress__step.is-active { color: var(--color-primary-dark); }
+.setup-progress__connector { color: var(--color-sky); font-size: 0.7rem; }
+
+.setup-step {
+  max-width: 720px;
+  margin: 28px auto 0;
+}
+.setup-step__title {
+  text-align: center;
+  font-size: 1.05rem;
+  color: var(--color-primary-dark);
+  margin: 0 0 14px;
+}
+
+/* ==========================================================================
+   OPTION CARD — komponen reusable TUNGGAL untuk seluruh pilihan selectable
+   di menu (jenis persilangan, spesies, mode). Satu class, dipakai di 3 grid
+   berbeda -> konsisten spacing/typography/state di mana pun (REVISI: Global
+   UI Consistency).
+   ========================================================================== */
+.inheritance-grid,
+.species-grid,
+.mode-selector,
+.option-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+  gap: 16px;
+}
+
+.option-card {
+  /* REVISI (Animation Fix — Root Cause #2, PALING BERDAMPAK): base rule ini
+     SEBELUMNYA tidak punya `transition` sama sekali, padahal dipakai untuk
+     SEMUA kartu pilihan di seluruh aplikasi (jenis persilangan, organisme,
+     mode, level Challenge) dan hover-nya mengubah transform/box-shadow/
+     border-color (lihat :hover di bawah) -- snap instan tanpa transition.
+     Ini kemungkinan sumber utama kesan "semua terasa instan", karena
+     inilah komponen yang paling sering disentuh user (layar setup +
+     pemilihan level Challenge). */
+  transition: transform var(--transition-normal), box-shadow var(--transition-normal),
+    border-color var(--transition-normal);
+  position: relative;
+  overflow: hidden;
+  background: var(--color-surface);
+  border: 2px solid var(--color-border);
+  border-radius: var(--radius-lg);
+  padding: 18px 16px;
+  text-align: left;
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  cursor: pointer;
+  font-family: inherit;
+  transition: transform var(--transition-base), box-shadow var(--transition-base), border-color var(--transition-base);
+}
+
+/* State: HOVER */
+.option-card:hover:not(:disabled) {
+  transform: translateY(-3px);
+  box-shadow: var(--shadow-medium);
+  border-color: var(--color-primary);
+}
+
+/* State: FOCUS (keyboard) */
+.option-card:focus-visible {
+  outline: 3px solid var(--color-accent);
+  outline-offset: 2px;
+}
+
+/* State: SELECTED */
+.option-card.is-selected {
+  border-color: var(--color-primary);
+  background: var(--color-primary-light);
+  box-shadow: 0 0 0 2px var(--color-primary);
+}
+
+/* State: DISABLED / COMING SOON — dikurangi emphasis-nya, bukan disembunyikan
+   (tetap terlihat sebagai "akan datang", bukan hilang begitu saja) */
+.option-card:disabled,
+.option-card.is-comingsoon {
+  cursor: not-allowed;
+  opacity: 0.55;
+  background: var(--color-bg);
+}
+.option-card:disabled:hover { transform: none; box-shadow: none; border-color: var(--color-border); }
+
+.option-card__icon { font-size: 2rem; }
+.option-card__title { font-family: var(--font-display); font-weight: 700; color: var(--color-primary-dark); font-size: 1rem; }
+.option-card__short { font-size: 0.8rem; font-weight: 600; color: var(--color-text-muted); }
+.option-card__desc { font-size: 0.8rem; color: var(--color-text-muted); }
+
+/* Status badge — TIDAK hanya mengandalkan warna (REVISI 20): selalu ada teks
+   "✓ Tersedia/Dipilih" atau "🔒 Segera Hadir" */
+.option-card__status {
+  margin-top: 6px;
+  font-size: 0.72rem;
+  font-weight: 700;
+  width: fit-content;
+  padding: 2px 10px;
+  border-radius: var(--radius-full);
+}
+.option-card__status.is-available {
+  color: var(--color-primary-dark);
+  background: var(--color-primary-light);
+}
+.option-card.is-selected .option-card__status.is-available {
+  color: #fff;
+  background: var(--color-primary);
+}
+.option-card__status.is-comingsoon {
+  color: var(--color-text-muted);
+  background: var(--color-border);
+}
+
+/* ==========================================================================
+   SETUP SUMMARY (REVISI: summary sebelum Start)
+   ========================================================================== */
+.setup-summary {
+  max-width: 480px;
+  margin: 32px auto 20px;
+  background: var(--color-surface);
+  border: 2px solid var(--color-border);
+  border-radius: var(--radius-lg);
+  padding: 22px;
+  text-align: center;
+}
+.setup-summary__title {
+  font-size: 1rem;
+  margin: 0 0 14px;
+  color: var(--color-primary-dark);
+}
+.setup-summary__list {
+  margin: 0 0 18px;
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+.setup-summary__row {
+  display: flex;
+  justify-content: space-between;
+  font-size: 0.85rem;
+  padding: 4px 2px;
+  border-bottom: 1px dashed var(--color-border);
+}
+.setup-summary__row dt { color: var(--color-text-muted); font-weight: 600; }
+.setup-summary__row dd { margin: 0; font-weight: 700; color: var(--color-text); }
+
+.btn--start-simulation { width: 100%; font-size: 1.05rem; padding: 14px; }
+.setup-summary__hint {
+  margin: 10px 0 0;
+  font-size: 0.75rem;
+  color: var(--color-text-muted);
+}
+
+@media (max-width: 600px) {
+  .inheritance-grid,
+  .species-grid,
+  .mode-selector,
+  .option-grid {
+    grid-template-columns: 1fr;
+  }
+}
+
+/* ==========================================================================
+   SIMULATOR TOPBAR
+   ========================================================================== */
+.simulator-topbar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: 14px;
+  margin-bottom: 20px;
+}
+
+.simulator-topbar__title {
+  font-size: 1.3rem;
+  flex: 1;
+  text-align: center;
+}
+
+/* ==========================================================================
+   SIMULATOR LAYOUT (sidebar - area - sidebar)
+   ========================================================================== */
+.simulator-layout {
+  display: grid;
+  grid-template-columns: 220px 1fr 220px;
+  gap: 20px;
+  align-items: start;
+}
+/* REVISI (Structural Fix — Sidebar mengikuti .crossing-box): override
+   ≥901px untuk `.simulator-layout` SENGAJA diletakkan setelah base rule
+   `.cross-workflow` di bawah (bukan di sini) — supaya urutan cascade CSS
+   benar: base rule `.cross-workflow{display:flex}` (tanpa media query)
+   harus muncul SEBELUM override `display:contents`-nya, kalau tidak base
+   rule yang menang (spesifisitas sama, urutan sumber yang menentukan).
+   Cari komentar "REVISI (Structural Fix ..." di dekat `.cross-workflow`. */
+
+@media (max-width: 900px) {
+  .simulator-layout {
+    grid-template-columns: 1fr;
+  }
+}
+
+/* ---- Sidebars ---- */
+.sidebar {
+  background: var(--color-surface);
+  border: 2px solid var(--color-border);
+  border-radius: var(--radius-lg);
+  padding: 16px;
+}
+
+.sidebar__title {
+  font-size: 1rem;
+  margin-bottom: 4px;
+}
+
+.sidebar__hint {
+  font-size: 0.78rem;
+  color: var(--color-text-muted);
+  margin: 0 0 12px;
+}
+
+.genotype-pool {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 8px;
+}
+
+/* REVISI (Bottom Alignment — density-aware pool): saat pool memiliki banyak
+   kombinasi (Dihibrid, >=6 item; Monohibrid yang cuma 3 item TIDAK match
+   selector ini sama sekali, jadi ukurannya tetap 100% seperti semula),
+   pindah ke 3 kolom + kepadatan kartu yang sedikit lebih ringkas supaya
+   tinggi Sidebar (natural) mendekati tinggi Area Tengah sebelum silang —
+   root cause "Sidebar Dihibrid jauh lebih tinggi dari crossing-box" pada
+   revisi Bottom Alignment. Murni content-count-driven via :has(), tanpa
+   menyentuh HTML/JS maupun styling Monohibrid. */
+.genotype-pool:has(> :nth-child(6)) {
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 5px;
+}
+.genotype-pool:has(> :nth-child(6)) .genotype-item {
+  gap: 2px;
+  padding: 4px 4px;
+}
+.genotype-pool:has(> :nth-child(6)) .genotype-item__icon {
+  width: 18px;
+  height: 18px;
+}
+.genotype-pool:has(> :nth-child(6)) .genotype-item__info {
+  column-gap: 3px;
+  line-height: 1.05;
+}
+.genotype-pool:has(> :nth-child(6)) .genotype-item__label {
+  font-size: 0.66rem;
+}
+.genotype-pool:has(> :nth-child(6)) .genotype-item__code {
+  font-size: 0.62rem;
+}
+
+/* REVISI (Vertical Composition Fix): chrome `.sidebar` (padding & hint)
+   ikut sedikit dipadatkan HANYA saat pool-nya padat (>=6 item -> Dihibrid),
+   selector sama persis (`:has()`, content-count-driven) dengan compaction
+   pool di atas — bukan rule baru berbasis nama mode. Diperlukan untuk
+   mengimbangi penghapusan row-gap mati di `.cross-workflow` (lihat REVISI
+   Vertical Composition Fix di sana): tanpa ini, Dihibrid yang tadinya
+   sudah mendekati seimbang justru jadi lebih longgar dibanding area
+   tengah yang sekarang lebih ringkas. Monohibrid (pool 3 item) tidak
+   pernah cocok dengan selector ini -> chrome sidebar-nya 100% tidak
+   berubah. */
+.sidebar:has(.genotype-pool > :nth-child(6)) {
+  padding: 12px 14px;
+}
+.sidebar:has(.genotype-pool > :nth-child(6)) .sidebar__hint {
+  margin: 0 0 8px;
+}
+
+/* REVISI (Sidebar Parent Card Compact — layout 2 kolom): pool sekarang grid
+   2 kolom (di atas) supaya 9 kombinasi Dihibrid jadi ~5 baris, bukan 9 baris
+   tunggal. Konsekuensinya lebar 1 card menyusut jadi ~setengah sidebar —
+   kalau icon & teks tetap sebaris (icon kiri, teks kanan) seperti sebelumnya,
+   ruang teks jadi terlalu sempit & malah wrap makin banyak baris. Makanya
+   `.genotype-item` diubah jadi flex-column (icon di atas, teks di bawah)
+   supaya teks memakai LEBAR PENUH card untuk wrap, bukan berbagi lebar
+   dengan icon. Baris kode & label sendiri tetap boleh menumpang 1 baris
+   (lihat `.genotype-item__info`) — jadi tinggi tiap card tetap content-driven,
+   bukan angka tetap. Berlaku otomatis utk Monohibrid & Dihibrid (shared,
+   tanpa modifier/class baru, tanpa menyentuh HTML/JS) — Parent Slot
+   (.slot-genotype*) di area persilangan tidak disentuh sama sekali. */
+.genotype-item {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 4px;
+  background: var(--color-primary-light);
+  border: 2px solid transparent;
+  border-radius: var(--radius-md);
+  padding: 6px 8px;
+  cursor: grab;
+  /* REVISI (Animation Fix): +opacity -- .is-dragging mengubah opacity juga,
+     sebelumnya tidak ikut ditransisikan (snap instan saat drag start/end). */
+  transition: transform var(--transition-base), box-shadow var(--transition-base),
+    border-color var(--transition-base), opacity var(--transition-base);
+}
+
+.genotype-item:hover {
+  border-color: var(--color-primary);
+  transform: translateY(-2px);
+}
+
+.genotype-item:active,
+.genotype-item.is-dragging {
+  cursor: grabbing;
+  opacity: 0.6;
+  transform: scale(0.97);
+}
+
+.genotype-item.is-selected,
+.slot-genotype.is-selected {
+  border-color: var(--color-accent);
+  background: rgba(255, 138, 61, 0.14);
+  box-shadow: 0 0 0 2px var(--color-accent);
+}
+
+.drop-slot__content[tabindex] {
+  cursor: pointer;
+}
+
+.drop-slot__content.is-placeable {
+  border-color: var(--color-accent);
+  background: rgba(255, 138, 61, 0.08);
+}
+
+.genotype-item__icon {
+  width: 26px;
+  height: 26px;
+  flex-shrink: 0;
+}
+
+.genotype-item__info {
+  display: flex;
+  flex-flow: row wrap;
+  align-items: baseline;
+  column-gap: 6px;
+  row-gap: 0;
+  line-height: 1.2;
+  width: 100%;
+  min-width: 0;
+}
+
+.genotype-item__label {
+  font-size: 0.74rem;
+  font-weight: 600;
+  overflow-wrap: break-word;
+}
+
+.genotype-item__code {
+  font-size: 0.68rem;
+  color: var(--color-text-muted);
+  font-family: "Courier New", monospace;
+  white-space: nowrap;
+}
+
+/* ==========================================================================
+   SIMULATION AREA — "garden"
+   ========================================================================== */
+/* ==========================================================================
+   CROSS WORKFLOW — satu alur menyatu: parent → punnett → hasil → rasio (REVISI 1)
+   ========================================================================== */
+.cross-workflow {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+/* REVISI (Structural Fix — Sidebar mengikuti .crossing-box, BUKAN seluruh
+   .cross-workflow): diletakkan DI SINI (setelah base rule .cross-workflow
+   persis di atas) BUKAN sekadar gaya penulisan — ini disengaja agar urutan
+   cascade CSS benar. `.simulator-layout` di ≥901px sekarang eksplisit 3
+   baris x 4 kolom lewat named areas. BARIS 1 ("left crossing crossing
+   right") HANYA berisi sidebar kiri, .crossing-box, sidebar kanan — jadi
+   align-items:stretch di baris ini murni menyamakan tinggi KETIGANYA
+   (persis requirement "Sidebar = tinggi Crossing Box"). BARIS 2 (connector)
+   & BARIS 3 (punnett | results) sengaja punya kolom 1 & 4 KOSONG ("." =
+   tidak ada grid item di sana) — artinya baris-baris ini secara struktural
+   TIDAK PERNAH "terlihat" oleh sidebar, tidak peduli sepanjang apa Punnett/
+   Rasio/Explanation di dalamnya. Dicapai TANPA mengubah HTML: `.cross-
+   workflow` (wrapper asli di HTML) diberi `display:contents` supaya anak-
+   anaknya bisa ditempatkan LANGSUNG ke grid `.simulator-layout` di atas —
+   makanya rule ini WAJIB muncul SETELAH base rule .cross-workflow{display:
+   flex} di atas (spesifisitas selector sama; kalau urutan dibalik, base
+   rule yang menang dan override ini tidak pernah aktif). */
+@media (min-width: 901px) {
+  .simulator-layout {
+    grid-template-columns: 220px 1fr 1fr 220px;
+    grid-template-areas:
+      "left crossing crossing right"
+      ".    connector connector ."
+      "postcross postcross postcross postcross"
+      "explanation explanation explanation explanation"
+      "academic  academic  academic  academic";
+    row-gap: 0;
+    column-gap: 20px;
+    /* stretch DI SINI supaya sidebar & crossing-box (baris 1) sama tinggi.
+       Baris 2 (connector, sendirian), baris 3 (.post-cross-row) & baris 4
+       (Ringkasan Akademik) masing-masing SENDIRIAN di barisnya -> stretch
+       tidak berpengaruh apa pun ke sana (tidak ada elemen lain di baris
+       yang sama untuk "disamakan"). Top-alignment Punnett vs Rasio (di
+       DALAM .post-cross-row) ditentukan oleh grid INTERNAL wrapper itu
+       sendiri, lihat REVISI Punnett+Ratio Full-Width di bawah. */
+    align-items: stretch;
+  }
+
+  .simulator-layout > .sidebar--left { grid-area: left; }
+  .simulator-layout > .sidebar--right { grid-area: right; }
+
+  .cross-workflow { display: contents; }
+
+  .cross-workflow > .crossing-box { grid-area: crossing; }
+  .cross-workflow > #connector-to-punnett {
+    grid-area: connector;
+    margin: 8px 0;
+    align-self: start;
+  }
+  /* REVISI (Punnett+Ratio Full-Width — mengikuti batas workspace, BUKAN
+     hanya lebar crossing-box): `.post-cross-row` adalah wrapper HTML baru
+     (satu-satunya penambahan struktur, murni kosmetik/layout, tidak
+     menyentuh id/isi #punnett-wrapper maupun #results-section) yang
+     dipromosikan `.cross-workflow` (display:contents) menjadi SATU grid
+     item spanning SELURUH 4 kolom ("postcross postcross postcross
+     postcross") — sehingga tepi kirinya = tepi kiri sidebar kiri, tepi
+     kanannya = tepi kanan sidebar kanan, PERSIS seperti baris 1 (sidebar-
+     crossing-sidebar). Di DALAM wrapper ini, Punnett & Rasio memakai grid
+     independen mereka sendiri (lihat `.post-cross-row` di bawah dekat
+     `.crossing-box`) — proporsi lebar mereka TIDAK terikat ke pembagian
+     4-kolom di atas sama sekali, jadi bisa diatur bebas (1.6fr:1fr) tanpa
+     mengubah baris 1. */
+  .cross-workflow > .post-cross-row { grid-area: postcross; }
+  /* REVISI (Jelaskan Hasil Ini — panel terpisah, TIDAK LAGI menentukan
+     tinggi #results-section): dulu nested di dalam #results-section
+     bersama .ratio-summary, sehingga saat panel penjelasan dibuka kontennya
+     ikut memperpanjang kotak Rasio. Sekarang direct child .cross-workflow
+     sendiri (dipindah di HTML), full-width & berada DI BAWAH baris
+     Punnett+Rasio, DI ATAS Ringkasan Akademik -- tinggi #results-section
+     dan tinggi #result-explanation sepenuhnya independen satu sama lain. */
+  .cross-workflow > #result-explanation {
+    grid-area: explanation;
+    align-self: start;
+    margin: 20px 0 0;
+  }
+  /* REVISI (Ringkasan Akademik — panel terpisah): dulu nested di dalam
+     #results-section (ikut lebar+tinggi kotak Rasio, terasa seperti child
+     dari Rasio). Sekarang direct child .cross-workflow sendiri (dipindah
+     di HTML, lihat index.html), full-width sama seperti .post-cross-row
+     di atas -> otomatis align kiri/kanan dengan sidebar & konsisten
+     dengan Riwayat di bawahnya (yang sudah full-width lewat container
+     halaman, di luar .simulator-layout). */
+  .cross-workflow > #academic-summary {
+    grid-area: academic;
+    align-self: start;
+    margin: 20px 0 0;
+  }
+}
+
+/* REVISI (Punnett+Ratio Full-Width, lanjutan): layout internal
+   `.post-cross-row` — mobile/tablet default `display:contents` supaya
+   Punnett/panah/Rasio tetap 100% flex children ASLI `.cross-workflow`
+   (persis seperti sebelum wrapper ini ada) -> stacking mobile, spacing,
+   dan behavior tombol "Tampilkan Hasil"/Challenge (ChildManager.hideView())
+   TIDAK berubah sama sekali di ≤900px. Baru di ≥901px wrapper ini
+   sungguhan jadi grid 2 kolom. */
+.post-cross-row { display: contents; }
+
+@media (min-width: 901px) {
+  .post-cross-row {
+    display: grid;
+    /* Punnett butuh ruang lebih (tabel, s.d. 5 kolom utk Dihibrid 4x4);
+       Rasio cukup dengan porsi lebih kecil (daftar teks) — 1.6fr:1fr
+       proporsional & content-driven dalam arti tidak hardcode px, tetap
+       fluid mengikuti lebar workspace di semua breakpoint. */
+    grid-template-columns: minmax(0, 1.6fr) minmax(0, 1fr);
+    column-gap: 20px;
+    /* REVISI (Bottom Alignment Punnett vs Ratio): stretch (bukan start) --
+       Punnett & Rasio sekarang disamakan TINGGI PANEL/CARD-nya (top DAN
+       bottom sejajar), mengikuti yang lebih tinggi di antara keduanya
+       secara natural (grid row auto-sized ke konten tertinggi). Ini AMAN
+       terhadap isi: `#punnett-wrapper`/`#results-section` (class
+       `.workflow-stage`) adalah block-box biasa (bukan flex/grid) dengan
+       hanya `padding`, jadi stretch hanya menambah tinggi BOX-nya --
+       `.punnett-table` & `.ratio-summary` di dalamnya tetap duduk natural
+       dari atas (TIDAK ikut diregangkan/di-scale), sisa ruang ekstra
+       murni jadi padding-bottom kosong di box yang lebih pendek. Tidak
+       ada fixed height, tidak hardcode ke salah satu mode -- keduanya
+       Mono & Dihibrid otomatis mengikuti siapa pun yang lebih tinggi. */
+    align-items: stretch;
+    margin-top: 16px;
+  }
+  .post-cross-row > #punnett-wrapper { margin: 0; }
+  .post-cross-row > #results-section { margin: 0; }
+  .post-cross-row > #connector-to-results { display: none; }
+}
+
+/* REVISI (Ringkasan Akademik & Jelaskan Hasil Ini mengikuti visibility
+   Rasio TANPA sentuh JS): dulu keduanya nested di dalam #results-section,
+   jadi otomatis ikut tersembunyi saat ChildManager.hideView()/reset()
+   men-set #results-section.hidden=true (dipakai Challenge Mode utk
+   sembunyikan jawaban salah, lihat ChildManager.hideView() di script.js)
+   — SEKARANG keduanya sibling terpisah, jadi perilaku itu direplikasi
+   murni lewat CSS (:has(), tanpa mengubah satu baris pun script.js):
+   setiap kali #results-section berstatus [hidden], paksa keduanya ikut
+   display:none, apa pun nilai atribut hidden/DOM state mereka sendiri.
+   Ini juga otomatis menutupi kondisi awal (sebelum silang pertama kali):
+   #result-explanation sengaja TIDAK punya atribut `hidden` sendiri di
+   HTML (tidak ada satu pun kode JS yang mengelolanya, persis seperti
+   tombol "Jelaskan Hasil Ini" sebelumnya yang visibilitasnya 100%
+   mengikuti parent) — jadi rule inilah SATU-SATUNYA yang mengatur
+   visibilitasnya, sepenuhnya derivatif dari #results-section. */
+.cross-workflow:has(#results-section[hidden]) > #academic-summary,
+.cross-workflow:has(#results-section[hidden]) > #result-explanation {
+  display: none;
+}
+
+/* REVISI 3B/3C: crossing-box menyatukan Step 1 (Parent+Silangkan) dan
+   Step 2 (Hasil Anak) dalam SATU box visual. Punnett & Rasio tetap box
+   terpisah (masing-masing dapat border/background sendiri di bawah). */
+.crossing-box {
+  position: relative; /* konteks untuk background PNG (::before) */
+  background: var(--color-surface); /* fallback jika gambar gagal dimuat */
+  border: 2px solid var(--color-border);
+  border-radius: var(--radius-lg);
+  padding: 8px;
+  display: flex;
+  flex-direction: column;
+}
+
+/* ==========================================================================
+   BACKGROUND LAB BOTANICAL (REVISI INTEGRASI BACKGROUND)
+   Layer 0: ilustrasi statis, murni dekoratif — TIDAK PERNAH menjadi drag
+   source/drop target (pointer-events:none) dan TIDAK PERNAH disentuh oleh
+   JavaScript/state (murni CSS, dimuat browser sekali sebagai background-image,
+   bukan lewat `new Image()` yang bisa ke-trigger ulang tiap render).
+   ========================================================================== */
+.crossing-box::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  border-radius: inherit; /* ikut rounded corner .crossing-box, tidak keluar kotak */
+  /* REVISI (Background Switching System): sumber gambar sekarang lewat CSS
+     var yang di-set oleh BackgroundManager.applyToDOM() — fallback ke asset
+     existing (Botanical Lab) kalau var belum di-set (mis. JS gagal load). */
+  background-image: var(--crossing-bg-image, url("assets/background/lab_botanical_background.png"));
+  background-repeat: no-repeat;
+  /* cover (bukan contain/stretch): crossing-box biasanya lebih TINGGI dari
+     lebar (terutama setelah anak muncul) -> cover mempertahankan SELURUH
+     tinggi ilustrasi (papan tanda atas -> meja bawah) dan memotong sisi
+     kiri-kanan secukupnya, bukan men-stretch/distorsi. */
+  background-size: cover;
+  /* "top" dipilih (bukan center) supaya papan tanda "Genetika Mendel I" di
+     bagian atas ilustrasi tetap terlihat saat box masih pendek (sebelum ada
+     hasil persilangan) — tanpa memindahkan satu pun spot interaktif. */
+  background-position: center top;
+  pointer-events: none; /* WAJIB: background tidak boleh menangkap drag/drop/click */
+  z-index: 0;
+}
+
+/* Layer 2+: seluruh konten interaktif eksplisit di atas background (::before
+   ada di z-index 0, konten asli .crossing-box tetap terbaca & tetap
+   menerima drag-drop/click seperti sebelumnya — perilaku sama sekali tidak
+   berubah, hanya urutan tumpuk visual). */
+.crossing-box > * {
+  position: relative;
+  z-index: 1;
+}
+
+.crossing-box__divider {
+  border: none;
+  border-top: 2px dashed var(--color-border);
+  margin: 4px 24px;
+}
+
+.workflow-stage {
+  padding: 24px 20px;
+}
+
+/* REVISI (Vertical Density — AFTER CROSS only): Step 2 (Hasil Anak), Step 3
+   (Punnett) & Step 4 (Rasio) HANYA tampil setelah persilangan ([hidden] di
+   HTML) — memadatkan padding WRAPPER-nya di sini tidak menyentuh Before
+   Cross sama sekali. Step 1 (.workflow-stage--parents, base rule di atas)
+   sengaja TIDAK disentuh supaya hasil Before Cross yang sudah balance
+   (selisih ~22px) tidak berubah. Ini murni padding CONTAINER — konten
+   Punnett Square (.punnett-table) dan Ratio (.ratio-summary/.ratio-list) di
+   dalamnya tidak diubah sama sekali. */
+.workflow-stage--children,
+.workflow-stage--punnett,
+.workflow-stage--results {
+  /* REVISI (Vertical Composition Fix): -2px/-2px lagi — After Cross
+     menumpuk 3 wrapper ini berurutan (offspring, Punnett, rasio), jadi
+     penghematan kecil di tiap wrapper terasa kumulatif. Konten di
+     dalamnya (.punnett-table, .ratio-summary/.ratio-list, .children-grid)
+     tidak disentuh sama sekali. */
+  padding: 14px 16px;
+}
+
+.workflow-stage__header {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  flex-wrap: wrap;
+}
+
+.workflow-stage__title {
+  text-align: center;
+  font-size: 1rem;
+  color: var(--color-primary-dark);
+  margin: 0 0 16px;
+}
+
+/* REVISI INTEGRASI BACKGROUND — Check 9 (readability): judul & hint di dalam
+   crossing-box duduk langsung di atas ilustrasi (tidak seperti drop-slot/label
+   yang sudah punya kartu solid sendiri). Beri chip putih tipis supaya tetap
+   terbaca jelas tanpa perlu overlay penuh yang meredupkan seluruh artwork. */
+.crossing-box .workflow-stage__title {
+  background: rgba(255, 255, 255, 0.75);
+  padding: 4px 16px;
+  border-radius: var(--radius-full);
+}
+/* Title Step 1 berdiri sendiri (konteks block, bukan flex) -> display:table
+   +margin:auto supaya chip ikut menyusut ke lebar teks sekaligus tetap center,
+   tanpa memindahkan posisi apa pun. */
+.workflow-stage--parents > .workflow-stage__title {
+  display: table;
+  margin: 0 auto 16px;
+}
+/* Title Step 2 berada di dalam .workflow-stage__header (sudah flex +
+   justify-content:center) -> TIDAK perlu margin:auto (berisiko bentrok
+   dengan flex sibling/badge di sebelahnya); flex item sudah otomatis
+   menyusut ke lebar konten. */
+.workflow-stage__header .workflow-stage__title { margin-bottom: 0; }
+
+/* REVISI (Vertical Density — margin JUDUL saja): Step 3 (Punnett) & Step 4
+   (Rasio) dipadatkan jarak antara judul dan kontennya. Ini tidak menyentuh
+   tabel Punnett atau ratio-summary/ratio-list itu sendiri — murni margin
+   heading. Step 1 (override di atas) & Step 2 (margin:0 di atas) tetap. */
+.workflow-stage--punnett > .workflow-stage__title,
+.workflow-stage--results > .workflow-stage__title {
+  margin-bottom: 10px;
+}
+
+/* REVISI INTEGRASI BACKGROUND: gradient lama DIHAPUS (dimigrasikan ke
+   .crossing-box::before di atas) — kalau tetap ada, background solid ini
+   akan menimpa/menyembunyikan PNG karena statusnya child DOM biasa yang
+   dirender di atas pseudo-element background milik parent-nya. */
+.workflow-stage--parents {
+  border-radius: var(--radius-md);
+}
+
+/* REVISI 10: Step 2 (Hasil Anak) tersembunyi sebelum ada persilangan,
+   TIDAK menampilkan child sebelum crossing berhasil */
+.workflow-stage--children[hidden] { display: none; }
+
+/* Punnett (Step 3) & Rasio (Step 4) sekarang box terpisah dari crossing-box —
+   masing-masing dapat card treatment sendiri, bukan menyatu jadi 1 card besar
+   seperti sebelumnya. */
+.workflow-stage--punnett,
+.workflow-stage--results {
+  background: var(--color-surface);
+  border: 2px solid var(--color-border);
+  border-radius: var(--radius-lg);
+  animation: workflowStageIn 320ms ease both;
+}
+
+@keyframes workflowStageIn {
+  /* REVISI (Animation Fix): 8px->12px -- lebih tertangkap mata pada durasi
+     380ms, tanpa membuat panel terasa "melompat". */
+  from { opacity: 0; transform: translateY(12px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+.workflow-connector {
+  text-align: center;
+  color: var(--color-sky);
+  font-size: 1.3rem;
+  font-weight: 700;
+  line-height: 1;
+}
+
+.workflow-connector--small {
+  font-size: 1rem;
+  margin: 8px 0;
+}
+
+.garden {
+  width: 100%;
+  max-width: 480px;
+  margin: 0 auto;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 20px;
+}
+
+/* REVISI (Parent Card Layout Optimization — lanjutan): grid 2 kolom SAMA
+   LEBAR (bukan flex shrink-to-fit) supaya Induk 1/Induk 2 selalu mendapat
+   proporsi ruang horizontal yang identik dan bisa dimanfaatkan card lebar
+   (mis. Dihibrid) tanpa mendorong tinggi. `align-items:start` supaya kedua
+   card tidak saling meregang mengikuti tinggi yang lebih besar. */
+.garden__row--parents {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+  width: 100%;
+  gap: 16px;
+  align-items: start;
+}
+
+.garden__cross-action {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+}
+
+/* ---- Drop slots ---- */
+.drop-slot {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 8px;
+  position: relative;
+}
+
+.drop-slot__label {
+  font-size: 0.8rem;
+  font-weight: 700;
+  color: var(--color-primary-dark);
+  background: var(--color-surface);
+  padding: 2px 12px;
+  border-radius: var(--radius-full);
+}
+
+/* REVISI 6: tombol hapus parent di pojok kanan atas */
+.remove-parent-btn {
+  position: absolute;
+  top: -6px;
+  right: -6px;
+  z-index: 2;
+  width: 26px;
+  height: 26px;
+  border-radius: var(--radius-full);
+  border: 2px solid var(--color-surface);
+  background: #E5473B;
+  color: #fff;
+  font-size: 0.75rem;
+  font-weight: 700;
+  line-height: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-shadow: var(--shadow-soft);
+  transition: transform var(--transition-base), background var(--transition-base);
+}
+.remove-parent-btn:hover { background: #C62828; transform: scale(1.08); }
+.remove-parent-btn[hidden] { display: none; }
+
+.drop-slot__content {
+  min-width: 128px;
+  min-height: 128px;
+  border: 3px dashed var(--color-sky);
+  border-radius: var(--radius-lg);
+  background: rgba(255, 255, 255, 0.6);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  padding: 10px;
+  transition: border-color var(--transition-base), background var(--transition-base), transform var(--transition-base), min-width var(--transition-base);
+}
+
+/* REVISI (Parent Card Layout Optimization — lanjutan): modifier GENERIK
+   berdasarkan kepadatan konten (ditoggle dari Renderer.renderParentSlot saat
+   traitIds.length > 1), BUKAN kelas khusus "dihybrid" dan BUKAN component
+   kedua. `width:100%` (dibatasi `max-width`) memanfaatkan lebar kolom grid
+   `.garden__row--parents` yang sekarang selalu tersedia penuh — bukan lagi
+   min-width sempit tetap seperti revisi sebelumnya — sehingga layout
+   horizontal (icon+genotipe sebaris, trait grid di bawahnya, lihat
+   .slot-genotype--multi) punya cukup ruang tanpa perlu menumpuk vertikal.
+   Tinggi tetap content-driven (min-height, bukan height tetap) — Task 2C/7.
+   .drop-slot__content dasar (tanpa modifier ini) TIDAK berubah sama sekali
+   utk Monohibrid. */
+.drop-slot__content--wide {
+  width: 100%;
+  max-width: 340px;
+  min-height: 108px;
+  padding: 10px 14px;
+}
+
+.drop-slot__content.is-dragover {
+  border-color: var(--color-accent);
+  background: rgba(255, 138, 61, 0.12);
+  transform: scale(1.04);
+}
+
+.drop-slot__content.is-placeable {
+  border-color: var(--color-accent);
+  background: rgba(255, 138, 61, 0.08);
+}
+
+.drop-slot__content.is-filled {
+  border-style: solid;
+  border-color: var(--color-primary);
+  background: var(--color-surface);
+}
+
+.drop-slot__placeholder {
+  font-size: 0.72rem;
+  color: var(--color-text-muted);
+}
+
+/* filled genotype display inside a parent slot */
+.slot-genotype {
+  /* REVISI (Animation Fix — Root Cause #1): base rule ini SEBELUMNYA tidak
+     punya `transition` sama sekali, padahal `.is-removing` (opacity:0,
+     scale:0.7) dan `.is-dragging` mengubah opacity/transform lewat
+     class toggle JS (lihat Animation.fadeOutThenRun di script.js, yang
+     menunggu 260ms via setTimeout SEBELUM menghapus elemen dari DOM --
+     tanpa transition, 260ms itu terbuang percuma karena elemen sudah
+     lompat instan ke opacity:0 di frame pertama). Ini akar dari keluhan
+     "visual muncul/hilang terlalu mendadak" saat parent dihapus. */
+  transition: opacity var(--transition-normal), transform var(--transition-normal),
+    border-color var(--transition-normal);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 4px;
+  cursor: grab;
+  transition: opacity 240ms ease, transform 240ms ease;
+}
+
+.slot-genotype__icon { width: 60px; height: 60px; }
+.slot-genotype__label { font-size: 0.75rem; font-weight: 700; text-align: center; }
+.slot-genotype__code {
+  font-family: "Courier New", monospace;
+  font-size: 0.72rem;
+  color: var(--color-text-muted);
+}
+
+/* REVISI (Parent Card Layout Optimization — lanjutan): PRIORITAS HORIZONTAL
+   di atas vertical stacking. Struktur jadi 2 baris lewat CSS Grid, bukan
+   ditumpuk flex-column 3-4 elemen seperti revisi sebelumnya:
+     Baris 1 [icon | genotipe]  — sebaris, horizontal
+     Baris 2 [trait grid, full width]
+   Ini mengurangi 1 "baris" tinggi dibanding revisi sebelumnya (icon &
+   genotipe tak lagi ditumpuk terpisah) sekaligus memanfaatkan lebar
+   .drop-slot__content--wide yang sekarang lebih lega. Modifier generik —
+   berlaku utk berapa pun jumlah trait > 1 di masa depan, bukan hardcode 2
+   trait/Dihibrid saja. */
+.slot-genotype--multi {
+  display: grid;
+  grid-template-columns: auto 1fr;
+  grid-template-areas:
+    "icon geno"
+    "traits traits";
+  align-items: center;
+  column-gap: 10px;
+  row-gap: 6px;
+  width: 100%;
+  text-align: left;
+  cursor: grab;
+}
+.slot-genotype--multi .slot-genotype__icon {
+  grid-area: icon;
+  width: 38px;
+  height: 38px;
+}
+.slot-genotype__genotype {
+  grid-area: geno;
+  font-family: "Courier New", monospace;
+  font-size: 1.1rem;
+  font-weight: 800;
+  letter-spacing: 0.5px;
+  color: var(--color-primary-dark);
+  line-height: 1.15;
+}
+.slot-genotype__traits {
+  grid-area: traits;
+  display: grid;
+  /* auto-fit: 2 kolom bila ruang cukup, otomatis jadi 1 kolom bila sempit
+     (mis. mobile) — TANPA perlu breakpoint terpisah (Task 9: "adaptif"). */
+  grid-template-columns: repeat(auto-fit, minmax(84px, 1fr));
+  gap: 3px 14px;
+  padding-top: 5px;
+  border-top: 1px solid var(--color-border);
+}
+.slot-genotype__trait {
+  display: flex;
+  flex-direction: column;
+}
+.slot-genotype__trait-name {
+  font-size: 0.58rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.4px;
+  color: var(--color-text-muted);
+  line-height: 1.3;
+}
+.slot-genotype__trait-value {
+  font-size: 0.72rem;
+  font-weight: 700;
+  color: var(--color-text);
+  line-height: 1.3;
+}
+
+@media (max-width: 600px) {
+  .drop-slot__content--wide {
+    max-width: 100%;
+  }
+}
+
+/* REVISI 6 & 13: fade-out saat parent dihapus */
+.slot-genotype.is-removing {
+  opacity: 0;
+  transform: scale(0.7);
+}
+
+/* REVISI 10 & 13: snap saat berhasil drop, shake saat drop tidak valid */
+@keyframes snapPop {
+  0% { transform: scale(1); }
+  40% { transform: scale(1.08); }
+  100% { transform: scale(1); }
+}
+.is-snapping { animation: snapPop 260ms ease; }
+
+@keyframes shakeInvalid {
+  0%, 100% { transform: translateX(0); }
+  20% { transform: translateX(-6px); }
+  40% { transform: translateX(6px); }
+  60% { transform: translateX(-4px); }
+  80% { transform: translateX(4px); }
+}
+.is-shaking { animation: shakeInvalid 400ms ease; border-color: #E5473B !important; }
+
+/* item terangkat saat di-drag (REVISI 13) */
+.slot-genotype.is-dragging,
+.child-card.is-dragging {
+  opacity: 0.5;
+  transform: scale(0.95) rotate(-2deg);
+}
+
+/* ==========================================================================
+   ORGANISM ASSET (PNG) — REVISI (Placeholder Architecture): generalisasi dari
+   .flower-asset lama. object-fit:contain supaya proporsional di semua ukuran
+   container tanpa stretching (REVISI 1C).
+   ========================================================================== */
+.organism-asset {
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+  display: block;
+  pointer-events: none; /* gambar murni dekoratif, klik/drag tetap ditangani elemen pembungkusnya */
+}
+
+/* REVISI (Asset Placeholder System, Bagian 4): fallback saat asset belum
+   tersedia (status:'placeholder' di ASSET_CONFIG, atau <img> gagal load) —
+   emoji ringan berbasis CSS, BUKAN broken-image icon bawaan browser. */
+.organism-asset--placeholder {
+  width: 100%;
+  height: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 1.4rem;
+  line-height: 1;
+  background: rgba(0, 0, 0, 0.03);
+  border: 1px dashed var(--color-border);
+  border-radius: var(--radius-md, 8px);
+  pointer-events: none;
+}
+
+/* ==========================================================================
+   EDUCATION PANEL
+   ========================================================================== */
+.education-panel {
+  margin-top: 28px;
+  background: var(--color-surface);
+  border: 2px solid var(--color-border);
+  border-radius: var(--radius-lg);
+  padding: 22px;
+}
+
+.education-panel__title {
+  font-size: 1.1rem;
+  margin-bottom: 16px;
+}
+
+/* REVISI (Education Steps Final Row Centering — prinsip sama persis dengan
+   REVISI Offspring Final Row Centering di .children-grid): auto-fit/1fr
+   pada CSS Grid tetap tidak bisa men-center baris terakhir yang tidak
+   penuh untuk grid multi-baris (jumlah kolom sama di semua baris,
+   ditentukan sekali untuk seluruh grid) -- flexbox wrap+justify-center
+   dipakai lagi di sini agar baris terakhir "Apa yang Sedang Terjadi?"
+   (mis. 8 langkah / N kolom yang tidak habis dibagi) otomatis center,
+   tanpa mengubah urutan/isi langkah maupun logic aktif/tidaknya step. */
+.education-steps {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 14px;
+}
+
+.education-step {
+  flex: 0 0 220px;
+  display: flex;
+  gap: 10px;
+  padding: 12px;
+  border-radius: var(--radius-md);
+  background: var(--color-bg);
+  border: 2px solid transparent;
+  opacity: 0.55;
+  transition: opacity var(--transition-base), border-color var(--transition-base), background var(--transition-base);
+}
+
+.education-step[data-active="true"] {
+  opacity: 1;
+  border-color: var(--color-primary);
+  background: var(--color-primary-light);
+}
+
+.education-step__num {
+  flex-shrink: 0;
+  width: 26px;
+  height: 26px;
+  border-radius: var(--radius-full);
+  background: var(--color-primary);
+  color: #fff;
+  font-weight: 700;
+  font-size: 0.8rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.education-step__body strong {
+  display: block;
+  font-size: 0.85rem;
+  margin-bottom: 2px;
+  color: var(--color-primary-dark);
+}
+
+.education-step__body p {
+  margin: 0;
+  font-size: 0.8rem;
+  color: var(--color-text-muted);
+}
+
+/* ==========================================================================
+   PUNNETT SQUARE (bagian dari .cross-workflow, lihat .workflow-stage)
+   ========================================================================== */
+/* REVISI (DIHIBRID): overflow-x:auto generik pada wrapper (bukan CSS baru
+   khusus dihibrid) — Punnett 2×2 (Monohibrid) selalu muat, tapi Punnett 4×4
+   (Dihibrid, 5 kolom termasuk header) bisa melebihi layar sempit. Berlaku
+   sama untuk KEDUANYA (Aturan #24: responsive behavior harus satu system),
+   tidak pernah terpicu untuk 2×2 karena memang tidak pernah overflow.
+   Applies to BOTH .punnett-wrapper id selector match. */
+#punnett-wrapper {
+  overflow-x: auto;
+}
+
+.punnett-table {
+  border-collapse: separate;
+  border-spacing: 6px;
+  margin: 0 auto;
+}
+
+.punnett-table td, .punnett-table th {
+  width: 64px;
+  height: 52px;
+  text-align: center;
+  border-radius: var(--radius-sm);
+  font-family: "Courier New", monospace;
+  font-weight: 700;
+  font-size: 0.9rem;
+  transition: transform var(--transition-base), box-shadow var(--transition-base);
+}
+
+.punnett-table th {
+  background: var(--color-sky-light);
+  color: var(--color-primary-dark);
+}
+
+.punnett-table td[data-cell-index] { cursor: pointer; }
+
+.punnett-cell--AA { background: var(--color-geno-AA); color: #fff; }
+.punnett-cell--Aa { background: var(--color-geno-Aa); color: #fff; }
+.punnett-cell--aa { background: var(--color-geno-aa); color: var(--color-text); }
+
+/* REVISI 8: sinkronisasi hover Punnett <-> kartu anak */
+.is-highlighted {
+  transform: scale(1.12);
+  box-shadow: 0 0 0 3px var(--color-accent), var(--shadow-medium);
+  z-index: 3;
+}
+
+/* ==========================================================================
+   HASIL PERSILANGAN — kartu anak (bagian dari .cross-workflow)
+   ========================================================================== */
+.results-section__hint {
+  text-align: center;
+  font-size: 0.82rem;
+  color: var(--color-text-muted);
+  margin: 0 0 10px;
+}
+/* Hint di Step 2 (Hasil Anak) duduk langsung di atas background -> chip
+   readability, di-center via display:table+margin:auto (konteks block,
+   bukan flex, di dalam #children-section) */
+.crossing-box .results-section__hint {
+  display: table;
+  margin: 0 auto 10px;
+  background: rgba(255, 255, 255, 0.75);
+  padding: 4px 14px;
+  border-radius: var(--radius-full);
+}
+
+/* REVISI (Offspring Final Row Centering): CSS Grid (`auto-fill`+`1fr`) tidak
+   punya mekanisme native untuk men-center BARIS TERAKHIR yang tidak penuh —
+   kolom kosongnya tetap "ada" secara struktural (grid selalu 1 jumlah kolom
+   yang sama di semua baris), hanya terlihat kosong di kanan. Flexbox
+   wrap+justify-content:center MEMANG solusi standar untuk kasus ini: setiap
+   baris (flex line) di-center independen, jadi baris penuh tetap terlihat
+   rata (isinya pas 1 baris, tidak ada apa-apa untuk di-center), sedangkan
+   baris terakhir yang cuma terisi sebagian otomatis center sebagai grup —
+   tanpa mengubah urutan card, tanpa JS, tanpa menghitung sisa kolom manual. */
+.children-grid {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 10px;
+  margin-bottom: 10px;
+}
+
+.child-card {
+  /* flex-shrink:0 (bukan 1) supaya lebar minimum 130px selalu terjaga
+     sama seperti `minmax(130px, ...)` grid lama -- kartu wrap ke baris baru
+     alih-alih menyusut, jumlah kartu per baris tetap konsisten seperti
+     sebelumnya. flex-grow:0 supaya kartu TIDAK ikut melebar mengisi sisa
+     baris (ukurannya tetap natural/konsisten baik di baris penuh maupun
+     baris terakhir yang di-center). */
+  flex: 0 0 130px;
+  background: var(--color-surface);
+  border: 2px solid var(--color-border);
+  border-radius: var(--radius-lg);
+  padding: 10px 10px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 4px;
+  cursor: grab;
+  /* REVISI (Animation Fix): +opacity -- .is-dragging mengubah opacity juga,
+     sebelumnya tidak ikut ditransisikan (snap instan saat drag start/end). */
+  transition: transform var(--transition-base), box-shadow var(--transition-base),
+    border-color var(--transition-base), opacity var(--transition-base);
+  /* REVISI (UI/UX Polish — Offspring Reveal): dulu bounce (overshoot) +
+     fill-mode `both`. `both` menahan keyframe akhir (transform:scale(1))
+     SELAMANYA sehingga menimpa transform hover/drag (`.is-dragging`) —
+     bug latent. Sekarang `backwards` (hanya menerapkan keyframe awal selama
+     delay, lalu style normal mengambil alih), easing tenang tanpa overshoot,
+     dan delay bertahap lewat --i (lihat blok stagger di bawah) supaya
+     offspring "muncul satu per satu" tanpa mengubah urutan DOM. */
+  /* REVISI (Animation Fix): stagger diperlambat 22ms->26ms/kartu supaya
+     "kartu 1 -> 2 -> 3 -> ..." lebih terasa mengalir, bukan numpuk. */
+  animation: cardAppear var(--transition-slow) calc(var(--i, 0) * 26ms) backwards;
+}
+
+@keyframes cardAppear {
+  /* REVISI (Animation Fix): jarak translateY diperbesar 10px->14px supaya
+     gerakan "masuk dari bawah" lebih jelas tertangkap mata (10px terlalu
+     halus untuk durasi 420ms, mudah terlewat/terasa seperti fade instan). */
+  0% { opacity: 0; transform: translateY(14px) scale(0.96); }
+  100% { opacity: 1; transform: translateY(0) scale(1); }
+}
+/* Stagger: hanya 20 kartu pertama yang diberi delay bertahap (maks ~420ms) —
+   kartu ke-21+ (jumlah offspring besar) muncul bersama kartu ke-20 supaya
+   tetap ringan & responsif. Murni CSS, tidak menyentuh urutan/isi kartu. */
+.children-grid > .child-card:nth-child(1)  { --i: 0; }
+.children-grid > .child-card:nth-child(2)  { --i: 1; }
+.children-grid > .child-card:nth-child(3)  { --i: 2; }
+.children-grid > .child-card:nth-child(4)  { --i: 3; }
+.children-grid > .child-card:nth-child(5)  { --i: 4; }
+.children-grid > .child-card:nth-child(6)  { --i: 5; }
+.children-grid > .child-card:nth-child(7)  { --i: 6; }
+.children-grid > .child-card:nth-child(8)  { --i: 7; }
+.children-grid > .child-card:nth-child(9)  { --i: 8; }
+.children-grid > .child-card:nth-child(10) { --i: 9; }
+.children-grid > .child-card:nth-child(11) { --i: 10; }
+.children-grid > .child-card:nth-child(12) { --i: 11; }
+.children-grid > .child-card:nth-child(13) { --i: 12; }
+.children-grid > .child-card:nth-child(14) { --i: 13; }
+.children-grid > .child-card:nth-child(15) { --i: 14; }
+.children-grid > .child-card:nth-child(16) { --i: 15; }
+.children-grid > .child-card:nth-child(17) { --i: 16; }
+.children-grid > .child-card:nth-child(18) { --i: 17; }
+.children-grid > .child-card:nth-child(19) { --i: 18; }
+.children-grid > .child-card:nth-child(n+20) { --i: 19; }
+
+.child-card:hover,
+.child-card:focus-visible {
+  border-color: var(--color-accent);
+  box-shadow: var(--shadow-medium);
+}
+
+.child-card.is-selected {
+  border-color: var(--color-accent);
+  background: rgba(255, 138, 61, 0.14);
+  box-shadow: 0 0 0 2px var(--color-accent);
+}
+
+.child-card__icon { width: 56px; height: 56px; }
+.child-card__label { font-size: 0.78rem; font-weight: 700; text-align: center; }
+.child-card__code {
+  font-family: "Courier New", monospace;
+  font-size: 0.72rem;
+  color: var(--color-text-muted);
+}
+
+/* REVISI (Vertical Density — Dihibrid only, content-count-driven via :has(),
+   pola yang sama seperti `.genotype-pool:has(> :nth-child(6))` di sidebar):
+   "Setiap kartu mewakili satu kotak Punnett Square" -> Dihibrid (4x4) = 16
+   kartu, Monohibrid (2x2) = 4 kartu. Saat kartu banyak (>=6, jadi hanya
+   match Dihibrid), padatkan ukurannya supaya baris yang dibutuhkan lebih
+   sedikit. Monohibrid TIDAK match selector ini sama sekali -> `.child-card`
+   dasar di atas tetap 100% seperti semula ("Monohibrid tidak berubah").
+   Tidak ada offspring yang dihapus/disembunyikan — murni ukuran kartu. */
+.children-grid:has(> :nth-child(6)) .child-card {
+  padding: 8px 6px;
+  gap: 3px;
+}
+.children-grid:has(> :nth-child(6)) .child-card__icon {
+  width: 42px;
+  height: 42px;
+}
+.children-grid:has(> :nth-child(6)) .child-card__label {
+  font-size: 0.7rem;
+}
+.children-grid:has(> :nth-child(6)) .child-card__code {
+  font-size: 0.64rem;
+}
+
+/* ---- Ratio summary (REVISI 7) ---- */
+/* REVISI (Ratio Column Alignment): dulu 2 kolom berdampingan
+   (repeat(auto-fit, minmax(220px,1fr))) -- di panel Rasio yang sekarang
+   relatif sempit (1fr dari split 1.6fr:1fr dengan Punnett), itu membuat
+   ruang PER tabel Genotipe/Fenotipe terlalu sempit untuk 3 kolom
+   label/jumlah/persentase (header "Jumlah"+"Persentase" bertabrakan).
+   Ditumpuk vertikal (Genotipe lalu Fenotipe di bawahnya) -- persis seperti
+   mockup target -- memberi lebar PENUH panel Rasio ke masing-masing
+   tabel, cukup ruang untuk 3 kolom yang rapi di semua breakpoint. */
+.ratio-summary {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  background: var(--color-primary-light);
+  border-radius: var(--radius-lg);
+  padding: 14px 16px;
+}
+
+.ratio-summary__col h5 {
+  font-size: 0.9rem;
+  margin-bottom: 8px;
+}
+
+.ratio-list {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  font-size: 0.85rem;
+}
+
+/* REVISI (Ratio Column Alignment): label/jumlah/persentase sekarang 3
+   <span> terpisah (lihat renderRatioList di script.js) yang ditata lewat
+   CSS Grid supaya kolomnya benar-benar konsisten -- BUKAN spasi manual.
+   Dipakai bersama untuk baris header (.ratio-row--header, statis di HTML)
+   maupun baris data (<li class="ratio-row">, di-render JS) supaya kolom
+   header & data DIJAMIN sejajar (satu definisi grid yang sama). */
+.ratio-row {
+  display: grid;
+  grid-template-columns: minmax(0, 1.3fr) minmax(0, 0.55fr) minmax(0, 0.75fr);
+  column-gap: 10px;
+  align-items: baseline;
+  padding: 3px 0;
+}
+
+.ratio-row__label {
+  text-align: left;
+  font-family: "Courier New", monospace;
+  color: var(--color-primary-dark);
+  font-weight: 700;
+  overflow-wrap: break-word;
+}
+
+.ratio-row__count,
+.ratio-row__percent {
+  text-align: right;
+  font-variant-numeric: tabular-nums;
+}
+
+.ratio-row--header {
+  padding: 0 0 6px;
+  margin-bottom: 4px;
+  border-bottom: 2px solid var(--color-border);
+  font-size: 0.72rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.02em;
+  color: var(--color-text-muted);
+}
+.ratio-row--header .ratio-row__label {
+  font-family: inherit;
+  color: inherit;
+  font-weight: inherit;
+}
+
+/* ==========================================================================
+   RIWAYAT PERSILANGAN (REVISI 12)
+   ========================================================================== */
+.history-panel {
+  margin: 24px auto 0;
+  background: var(--color-surface);
+  border: 2px solid var(--color-border);
+  border-radius: var(--radius-lg);
+  padding: 20px 22px;
+}
+
+.history-panel__title {
+  font-size: 1rem;
+  margin-bottom: 10px;
+}
+
+.history-panel__empty {
+  font-size: 0.85rem;
+  color: var(--color-text-muted);
+  margin: 0;
+}
+
+.history-list {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.history-item {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  flex-wrap: wrap;
+  font-size: 0.85rem;
+  padding: 8px 12px;
+  background: var(--color-bg);
+  border-radius: var(--radius-md);
+}
+
+.history-item__cross {
+  font-family: "Courier New", monospace;
+  font-weight: 700;
+  color: var(--color-primary-dark);
+}
+
+.history-item__arrow { color: var(--color-sky); font-weight: 700; }
+.history-item__result { color: var(--color-text-muted); }
+.history-item__gen {
+  font-family: var(--font-display);
+  font-weight: 700;
+  font-size: 0.72rem;
+  color: #fff;
+  background: var(--color-primary);
+  padding: 2px 8px;
+  border-radius: var(--radius-full);
+}
+
+/* ==========================================================================
+   DIALOG KONFIRMASI (REVISI 10)
+   ========================================================================== */
+.confirm-modal {
+  position: fixed;
+  inset: 0;
+  background: rgba(27, 27, 27, 0.45);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 100;
+  padding: 16px;
+}
+
+/* PENTING: tanpa aturan ini, "display: flex" di atas akan selalu menang
+   melawan default browser untuk [hidden], sehingga modal tetap tampil
+   (dan menutupi/memblokir elemen lain) meski atribut hidden aktif. */
+.confirm-modal[hidden] {
+  display: none;
+}
+
+.confirm-modal__box {
+  background: var(--color-surface);
+  border-radius: var(--radius-lg);
+  padding: 24px;
+  max-width: 360px;
+  width: 100%;
+  box-shadow: var(--shadow-medium);
+  text-align: center;
+}
+
+.confirm-modal__box p {
+  margin: 0 0 18px;
+  font-size: 0.95rem;
+  color: var(--color-text);
+}
+
+.confirm-modal__actions {
+  display: flex;
+  gap: 10px;
+  justify-content: center;
+}
+
+/* ==========================================================================
+   SIDEBAR SEBAGAI DRAWER (REVISI 14) — pakai <details>/<summary> native
+   ========================================================================== */
+.sidebar > summary {
+  cursor: pointer;
+  list-style: none;
+  font-family: var(--font-display);
+  font-weight: 700;
+  color: var(--color-primary-dark);
+  margin-bottom: 4px;
+}
+.sidebar > summary::-webkit-details-marker { display: none; }
+.sidebar > summary::after {
+  content: "▾";
+  float: right;
+  transition: transform var(--transition-base);
+}
+.sidebar[open] > summary::after { transform: rotate(180deg); }
+
+@media (min-width: 901px) {
+  /* Di desktop, sidebar selalu terbuka dan marker disembunyikan sepenuhnya */
+  .sidebar > summary { pointer-events: none; }
+  .sidebar > summary::after { display: none; }
+  /* CATATAN: position:sticky pernah dicoba di sini utk sidebar supaya
+     "menemani" scroll saat center lebih tinggi (Dihibrid), lalu DIBATALKAN
+     atas permintaan eksplisit — sidebar harus tetap jadi bagian diam dari
+     satu grid workspace (lihat align-items:stretch pada .simulator-layout),
+     bukan mengikuti scroll. Jangan tambahkan sticky/fixed/absolute di sini. */
+}
+
+/* ==========================================================================
+   RESPONSIVE FINE-TUNING
+   ========================================================================== */
+@media (max-width: 600px) {
+  .app-header__title { font-size: 1.3rem; }
+  /* REVISI (Parent Card Layout Optimization — lanjutan): Induk 1/Induk 2
+     stack vertikal di mobile (Task 9), bukan dipaksa berdampingan sempit. */
+  .garden__row--parents { grid-template-columns: 1fr; gap: 10px; }
+  /* REVISI: rule lama ini dulu berlaku untuk SEMUA .drop-slot__content tanpa
+     kecuali, sehingga box lebar Dihibrid (--wide) ikut terpaksa mengecil
+     jadi 104×104 di mobile dan kontennya overflow. Sekarang di-scope hanya
+     ke box non-wide (Monohibrid) — box --wide sudah punya aturan
+     responsive sendiri (max-width:100%, lihat blok .drop-slot__content--wide
+     di atas) dan TIDAK boleh ikut diperkecil paksa ke ukuran persegi kecil. */
+  .drop-slot__content:not(.drop-slot__content--wide) { width: 104px; height: 104px; }
+  .children-grid { gap: 10px; }
+  .child-card { flex-basis: 105px; }
+  .simulator-topbar { flex-direction: column; align-items: stretch; text-align: center; }
+}
+
+/* ==========================================================================
+   DESIGN SYSTEM — komponen reusable (REVISI 9)
+   ========================================================================== */
+
+/* ---- Ripple (micro-interaction tombol, Revisi 6) ---- */
+.ripple {
+  position: absolute;
+  border-radius: 50%;
+  background: rgba(255, 255, 255, 0.55);
+  transform: scale(0);
+  pointer-events: none;
+  animation: rippleExpand 500ms ease-out;
+}
+.btn--ghost .ripple,
+.option-card .ripple {
+  background: rgba(46, 125, 50, 0.18);
+}
+@keyframes rippleExpand {
+  to { transform: scale(2.2); opacity: 0; }
+}
+
+/* ---- Badge ---- */
+.badge {
+  display: inline-flex;
+  align-items: center;
+  padding: 3px 12px;
+  border-radius: var(--radius-full);
+  font-size: 0.72rem;
+  font-weight: 700;
+  white-space: nowrap;
+}
+.badge--accent {
+  background: var(--color-accent);
+  color: #fff;
+}
+.badge[hidden] { display: none; }
+
+/* ---- Tooltip (REVISI 8): CSS murni via data-tooltip, muncul halus ----
+   REVISI (UI/UX Polish — akar overflow horizontal): dulu ::after tooltip
+   memakai `opacity:0; visibility:hidden` saat idle. Elemen seperti itu TETAP
+   dihitung sebagai scrollable overflow oleh browser -> tooltip kode genotipe
+   di sidebar kanan yang menjulur melewati tepi viewport menambah lebar
+   scroll halaman (scrollWidth > clientWidth) di Dihibrid pada ≤1440px dan
+   di mobile, walau tidak terlihat. Sekarang tooltip `display:none` saat idle
+   (tidak ada kontribusi layout sama sekali) dan baru dirender saat
+   hover/focus, muncul lewat keyframe (bukan transition, karena transition
+   tidak jalan dari display:none). Lebar dibatasi supaya tidak keluar layar. */
+[data-tooltip] {
+  position: relative;
+  cursor: help;
+  border-bottom: 1px dotted var(--color-text-muted);
+}
+[data-tooltip]::after {
+  content: attr(data-tooltip);
+  display: none;
+  position: absolute;
+  bottom: calc(100% + 8px);
+  left: 50%;
+  transform: translateX(-50%);
+  background: var(--color-text);
+  color: #fff;
+  font-size: 0.7rem;
+  font-weight: 500;
+  line-height: 1.35;
+  padding: 5px 9px;
+  border-radius: var(--radius-sm);
+  width: max-content;
+  max-width: min(220px, 60vw);
+  white-space: normal;
+  text-align: center;
+  pointer-events: none;
+  z-index: 10;
+}
+[data-tooltip]:hover::after,
+[data-tooltip]:focus-visible::after {
+  display: block;
+  animation: tooltipIn var(--transition-fast) ease-out both;
+}
+@keyframes tooltipIn {
+  from { opacity: 0; transform: translateX(-50%) translateY(4px); }
+  to { opacity: 1; transform: translateX(-50%) translateY(0); }
+}
+/* Sidebar kanan berada di tepi kanan layar: jangkarkan tooltip ke kanan
+   supaya tidak menjulur keluar viewport. Sidebar kiri ke kiri. */
+.sidebar--right [data-tooltip]::after { left: auto; right: 0; transform: none; }
+.sidebar--left [data-tooltip]::after { left: 0; transform: none; }
+.sidebar--right [data-tooltip]:hover::after,
+.sidebar--right [data-tooltip]:focus-visible::after,
+.sidebar--left [data-tooltip]:hover::after,
+.sidebar--left [data-tooltip]:focus-visible::after {
+  animation-name: tooltipInAnchored;
+}
+@keyframes tooltipInAnchored {
+  from { opacity: 0; transform: translateY(4px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+/* ==========================================================================
+   TOPBAR ACTIONS — Undo/Redo/Reset (REVISI 14)
+   ========================================================================== */
+.topbar-actions {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+/* ==========================================================================
+   BACKGROUND SELECTOR (Bagian 3 revisi) — native <details>/<summary>, tidak
+   perlu JS untuk buka/tutup. Sengaja kecil (bukan modal besar) supaya tidak
+   mendominasi topbar simulator.
+   ========================================================================== */
+.bg-selector {
+  position: relative;
+}
+
+.bg-selector__toggle {
+  list-style: none;
+  cursor: pointer;
+}
+.bg-selector__toggle::-webkit-details-marker { display: none; }
+
+.bg-selector__panel {
+  position: absolute;
+  top: calc(100% + 6px);
+  right: 0;
+  z-index: 20;
+  min-width: 200px;
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  padding: 8px;
+  background: var(--color-surface);
+  border: 2px solid var(--color-border);
+  border-radius: var(--radius-md);
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.12);
+}
+
+.background-option {
+  /* REVISI (Animation Fix — Root Cause #2b): base rule tidak punya transition
+     padahal :hover & .is-active mengubah background/border-color. */
+  transition: background var(--transition-normal), border-color var(--transition-normal);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 10px;
+  padding: 8px 10px;
+  border: 1px solid transparent;
+  border-radius: var(--radius-sm, 6px);
+  background: transparent;
+  font: inherit;
+  text-align: left;
+  cursor: pointer;
+}
+.background-option:hover:not(:disabled) {
+  background: rgba(0, 0, 0, 0.04);
+}
+.background-option.is-active {
+  border-color: var(--color-primary, #3a7d44);
+  background: rgba(58, 125, 68, 0.08);
+}
+.background-option.is-comingsoon,
+.background-option:disabled {
+  cursor: not-allowed;
+  opacity: 0.55;
+}
+.background-option__status {
+  font-size: 0.72rem;
+  font-weight: 600;
+  white-space: nowrap;
+}
+.background-option__status.is-comingsoon { color: var(--color-text-muted); }
+.background-option__status.is-available { color: var(--color-primary, #3a7d44); }
+
+/* Catatan model sederhana (edukasi) — satu baris, tidak mengganggu gameplay */
+.simplified-model-note {
+  text-align: center;
+  font-size: 0.78rem;
+  color: var(--color-text-muted);
+  margin: 4px 0 0;
+}
+
+.btn--icon {
+  padding: 10px 14px;
+  font-size: 1.1rem;
+  line-height: 1;
+}
+
+.btn--small {
+  padding: 8px 14px;
+  font-size: 0.82rem;
+}
+
+.btn:disabled {
+  opacity: 0.4;
+  cursor: not-allowed;
+  transform: none !important;
+}
+
+/* ==========================================================================
+   SELECTION TOOLBAR (REVISI 13) — alternatif drag-drop, ramah touch/mobile
+   ========================================================================== */
+.selection-toolbar {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-wrap: wrap;
+  gap: 10px;
+  background: var(--color-primary-light);
+  border: 2px solid var(--color-primary);
+  border-radius: var(--radius-full);
+  padding: 10px 16px;
+  margin-bottom: 16px;
+  animation: workflowStageIn 200ms ease both;
+}
+.selection-toolbar[hidden] { display: none; }
+
+.selection-toolbar__text {
+  font-size: 0.85rem;
+  font-weight: 600;
+  color: var(--color-primary-dark);
+}
+
+/* ==========================================================================
+   GENERATION TIMELINE (REVISI 12)
+   ========================================================================== */
+.generation-timeline {
+  margin: 0 auto 20px;
+  background: var(--color-surface);
+  border: 2px solid var(--color-border);
+  border-radius: var(--radius-lg);
+  padding: 18px 20px;
+}
+.generation-timeline[hidden] { display: none; }
+
+.generation-timeline__title {
+  font-size: 0.95rem;
+  text-align: center;
+  margin: 0 0 14px;
+}
+
+.timeline-track {
+  display: flex;
+  align-items: stretch;
+  gap: 8px;
+  overflow-x: auto;
+  padding-bottom: 4px;
+}
+.timeline-track[hidden] { display: none; }
+
+.timeline-connector {
+  align-self: center;
+  color: var(--color-sky);
+  font-weight: 700;
+  flex-shrink: 0;
+}
+
+.timeline-node {
+  flex-shrink: 0;
+  min-width: 110px;
+  border: 2px solid var(--color-border);
+  background: var(--color-bg);
+  border-radius: var(--radius-md);
+  padding: 8px 12px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 2px;
+  cursor: pointer;
+  transition: transform var(--transition-base), border-color var(--transition-base), box-shadow var(--transition-base);
+}
+
+.timeline-node:hover {
+  transform: translateY(-2px);
+  box-shadow: var(--shadow-soft);
+}
+
+.timeline-node.is-active {
+  border-color: var(--color-accent);
+  background: rgba(255, 138, 61, 0.1);
+  box-shadow: 0 0 0 2px var(--color-accent);
+}
+
+.timeline-node__gen {
+  font-family: var(--font-display);
+  font-weight: 700;
+  font-size: 0.85rem;
+  color: var(--color-primary-dark);
+}
+
+.timeline-node__cross {
+  font-family: "Courier New", monospace;
+  font-size: 0.72rem;
+  color: var(--color-text-muted);
+}
+
+.timeline-node__result {
+  font-size: 0.7rem;
+  text-align: center;
+  color: var(--color-text);
+}
+
+/* ==========================================================================
+   ACTIVITY LOG PANEL (REVISI 14)
+   ========================================================================== */
+.activity-log-panel {
+  margin: 20px auto 0;
+  background: var(--color-surface);
+  border: 2px solid var(--color-border);
+  border-radius: var(--radius-lg);
+  padding: 20px 22px;
+}
+
+.activity-log-panel__title {
+  font-size: 1rem;
+  margin: 0 0 10px;
+}
+
+.activity-log-panel__empty {
+  font-size: 0.85rem;
+  color: var(--color-text-muted);
+  margin: 0;
+}
+
+.activity-log-list {
+  max-height: 180px;
+  overflow-y: auto;
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.activity-log-item {
+  display: flex;
+  gap: 10px;
+  font-size: 0.8rem;
+  padding: 4px 0;
+  border-bottom: 1px dashed var(--color-border);
+}
+
+.activity-log-item__time {
+  font-family: "Courier New", monospace;
+  color: var(--color-text-muted);
+  flex-shrink: 0;
+}
+
+.activity-log-item__text {
+  color: var(--color-text);
+}
+
+@media (max-width: 600px) {
+  .topbar-actions { flex-wrap: wrap; justify-content: center; }
+}
+
+/* .mode-selector kini bagian dari komponen .option-card generik (lihat atas) */
+
+.btn--dashboard-open {
+  display: flex;
+  margin: 0 auto 24px;
+}
+
+.badge--mode {
+  background: var(--color-sky);
+  color: var(--color-primary-dark);
+}
+
+/* ==========================================================================
+   LEARNING CHECKLIST (REVISI 15)
+   ========================================================================== */
+.learning-checklist {
+  margin: 0 auto 16px;
+  background: var(--color-surface);
+  border: 2px solid var(--color-primary);
+  border-radius: var(--radius-lg);
+  padding: 16px 20px;
+}
+.learning-checklist[hidden] { display: none; }
+
+.learning-checklist__title { font-size: 0.95rem; margin: 0 0 10px; }
+
+.learning-checklist__progress-bar {
+  height: 6px;
+  background: var(--color-border);
+  border-radius: var(--radius-full);
+  overflow: hidden;
+  margin-bottom: 12px;
+}
+.learning-checklist__progress-fill {
+  height: 100%;
+  background: var(--color-accent);
+  width: 0%;
+  transition: width 300ms ease;
+}
+
+.learning-checklist__list {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
+  gap: 8px;
+  font-size: 0.78rem;
+}
+
+.learning-checklist__item {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  padding: 6px 8px;
+  border-radius: var(--radius-sm);
+  color: var(--color-text-muted);
+}
+.learning-checklist__item[data-state="done"] { color: var(--color-primary-dark); font-weight: 600; }
+.learning-checklist__item[data-state="active"] { background: var(--color-primary-light); color: var(--color-primary-dark); font-weight: 700; }
+.learning-checklist__item[data-state="locked"] { opacity: 0.5; }
+
+.learning-ack-btn { margin-top: 8px; }
+/* REVISI: tombol ini duduk langsung di atas background gambar .crossing-box,
+   dan .btn--ghost defaultnya transparent -> nge-blend juga seperti .learning-note. */
+.crossing-box .learning-ack-btn {
+  background: rgba(255, 255, 255, 0.85);
+}
+.crossing-box .learning-ack-btn:hover {
+  background: var(--color-primary-light);
+}
+
+/* REVISI (Learning Mode Pedagogical Flow): teks observasi singkat yang muncul
+   SEBELUM tombol ack "Mengerti, Lanjut" di step Amati Hasil Anak / Amati
+   Papan Punnett — supaya ack selalu punya konten nyata untuk dipahami. */
+.learning-note {
+  font-size: 0.85rem;
+  color: var(--color-text-muted);
+  font-style: italic;
+  margin: 10px 0 4px;
+}
+.learning-note[hidden] { display: none; }
+/* REVISI: sama seperti .results-section__hint — teks ini duduk langsung di
+   atas background gambar .crossing-box, jadi butuh chip background sendiri
+   supaya tidak nge-blend/susah dibaca. */
+.crossing-box .learning-note {
+  display: table;
+  background: rgba(255, 255, 255, 0.85);
+  padding: 6px 14px;
+  border-radius: var(--radius-md);
+}
+
+/* Elemen terkunci Learning Mode: visual jelas + tidak bisa diinteraksi */
+.is-locked-by-learning {
+  opacity: 0.45;
+  pointer-events: none;
+  position: relative;
+}
+
+/* ==========================================================================
+   CHALLENGE MODE (REVISI 16)
+   ========================================================================== */
+.challenge-panel {
+  margin: 0 auto 16px;
+  background: var(--color-surface);
+  border: 2px solid var(--color-accent);
+  border-radius: var(--radius-lg);
+  padding: 18px 20px;
+}
+.challenge-panel[hidden] { display: none; }
+
+/* REVISI (Challenge Level Selection) — sama persis bentuk visual
+   .challenge-panel supaya transisi antara Level Selection <-> sesi soal
+   terasa konsisten, tidak seperti berpindah ke komponen lain. */
+.challenge-level-select {
+  margin: 0 auto 16px;
+  background: var(--color-surface);
+  border: 2px solid var(--color-accent);
+  border-radius: var(--radius-lg);
+  padding: 18px 20px;
+  text-align: center;
+}
+.challenge-level-select[hidden] { display: none; }
+.challenge-level-select .challenge-panel__title { margin-bottom: 6px; }
+.challenge-level-select .option-grid { margin-top: 14px; text-align: left; }
+
+/* REVISI (Fix "Akhiri Sesi" -> Sandbox): parent/pool terkunci visual selama
+   masih dalam konteks Challenge tanpa sesi aktif (Level Selection) — sama
+   perilakunya dengan .is-locked-by-learning, class terpisah supaya sumber
+   kuncian (Learning vs Challenge) tetap bisa dibedakan lewat DOM kalau perlu. */
+.is-locked-by-challenge {
+  opacity: 0.45;
+  pointer-events: none;
+  position: relative;
+}
+
+.challenge-panel__header {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  flex-wrap: wrap;
+  margin-bottom: 6px;
+}
+.challenge-panel__title { font-size: 1rem; margin: 0; }
+.badge--score {
+  background: var(--color-sky-light);
+  color: var(--color-primary-dark);
+}
+.challenge-panel__objective {
+  text-align: center;
+  font-family: "Courier New", monospace;
+  font-size: 1.1rem;
+  font-weight: 700;
+  color: var(--color-primary-dark);
+  margin: 8px 0 2px;
+}
+
+/* REVISI: hasil akhir sesi Challenge (setelah semua soal selesai) */
+.challenge-final-result {
+  margin-top: 14px;
+  padding: 14px 16px;
+  border-radius: var(--radius-md);
+  background: var(--color-primary-light);
+  border: 2px solid var(--color-primary);
+  text-align: center;
+}
+.challenge-final-result[hidden] { display: none; }
+.challenge-final-result h4 { margin: 0 0 6px; color: var(--color-primary-dark); }
+.challenge-final-result p { margin: 0; font-size: 0.9rem; }
+
+/* REVISI: catatan identitas Learning Mode (guided, bukan evaluasi) */
+.learning-guided-note {
+  margin: 0 auto 16px;
+  background: var(--color-sky-light);
+  border: 2px solid var(--color-sky);
+  border-radius: var(--radius-lg);
+  padding: 12px 18px;
+  font-size: 0.85rem;
+  color: var(--color-primary-dark);
+}
+.learning-guided-note[hidden] { display: none; }
+.learning-guided-note p { margin: 0; }
+.challenge-panel__hint { text-align: center; font-size: 0.78rem; color: var(--color-text-muted); margin: 0 0 14px; }
+.challenge-lock-hint {
+  text-align: center;
+  font-size: 0.8rem;
+  font-weight: 700;
+  margin: 0 0 14px;
+  padding: 6px 12px;
+  border-radius: var(--radius-full);
+  width: fit-content;
+  margin-left: auto;
+  margin-right: auto;
+}
+.challenge-lock-hint.is-locked { background: var(--color-border); color: var(--color-text-muted); }
+.challenge-lock-hint.is-unlocked { background: var(--color-primary-light); color: var(--color-primary-dark); }
+
+.challenge-panel__questions {
+  display: flex;
+  gap: 24px;
+  justify-content: center;
+  flex-wrap: wrap;
+  margin-bottom: 14px;
+}
+.challenge-question-group {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  min-width: 160px;
+}
+.challenge-question-group__label {
+  font-size: 0.8rem;
+  font-weight: 700;
+  color: var(--color-text);
+}
+.challenge-question-rows {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+.challenge-question-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 10px;
+}
+.challenge-question-row__label {
+  font-family: "Courier New", monospace;
+  font-weight: 700;
+  font-size: 0.85rem;
+  min-width: 34px;
+}
+
+/* ---- .select: komponen dropdown TUNGGAL untuk seluruh aplikasi (REVISI 4:
+   Visual/Global UI Consistency) — width/height/padding/border/typography
+   sama persis di mana pun <select> dipakai, bukan gaya ad-hoc per tempat. ---- */
+.select {
+  font-family: inherit;
+  font-size: 0.85rem;
+  font-weight: 600;
+  padding: 8px 10px;
+  height: 38px;
+  min-width: 84px;
+  border-radius: var(--radius-sm);
+  border: 2px solid var(--color-border);
+  background: var(--color-bg);
+  color: var(--color-text);
+  cursor: pointer;
+  transition: border-color var(--transition-base), box-shadow var(--transition-base);
+}
+.select:hover:not(:disabled) { border-color: var(--color-primary); }
+.select:disabled { opacity: 0.6; cursor: not-allowed; }
+.select:focus-visible { outline: 3px solid var(--color-accent); outline-offset: 1px; }
+
+.challenge-panel__actions {
+  display: flex;
+  gap: 10px;
+  justify-content: center;
+}
+
+.challenge-feedback {
+  margin-top: 14px;
+  padding: 12px 14px;
+  border-radius: var(--radius-md);
+  font-size: 0.85rem;
+}
+.challenge-feedback[hidden] { display: none; }
+.challenge-feedback__verdict { font-weight: 700; margin: 0 0 8px; }
+.challenge-feedback__meta { font-size: 0.85rem; opacity: 0.85; margin: 0 0 8px; }
+.challenge-feedback__toggle-result { margin-right: 8px; }
+.challenge-feedback__explain { margin-top: 8px; font-weight: 400; }
+.challenge-feedback__explain[hidden] { display: none; }
+.challenge-feedback.is-correct { background: var(--color-primary-light); color: var(--color-primary-dark); }
+.challenge-feedback.is-incorrect { background: #FDEBEA; color: #B3261E; }
+
+/* ==========================================================================
+   VIEW TABS (dipakai Timeline/Tree & Explain panel)
+   ========================================================================== */
+.view-tabs {
+  display: flex;
+  gap: 6px;
+  background: var(--color-primary-light);
+  border-radius: var(--radius-full);
+  padding: 3px;
+}
+.view-tab {
+  border: none;
+  background: transparent;
+  padding: 6px 14px;
+  border-radius: var(--radius-full);
+  font-size: 0.78rem;
+  font-weight: 600;
+  color: var(--color-primary-dark);
+  cursor: pointer;
+  transition: background var(--transition-base), color var(--transition-base);
+}
+.view-tab.is-active { background: var(--color-accent); color: #fff; }
+
+.generation-timeline__header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: 10px;
+  margin-bottom: 14px;
+}
+.generation-timeline__header .generation-timeline__title { margin: 0; }
+
+/* ==========================================================================
+   GENERATION TREE — pedigree/genealogy tree sungguhan (REVISI KRITIS)
+   Hierarchy: Parents -> Cross-node -> Children, bersarang secara DOM.
+   Connector digambar via SVG dari posisi node aktual (getBoundingClientRect),
+   bukan CSS border/text-arrow statis.
+   ========================================================================== */
+.generation-tree-wrap[hidden] { display: none; }
+
+.tree-toolbar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: 10px;
+  margin-bottom: 10px;
+}
+.tree-toolbar__hint { font-size: 0.78rem; color: var(--color-text-muted); }
+.tree-toolbar__controls { display: flex; align-items: center; gap: 6px; }
+#tree-debug-toggle.is-active { background: var(--color-primary-light); border-color: var(--color-primary); }
+
+/* Requirement 13/14: viewport dengan scroll TERKONTROL — bukan seluruh
+   halaman ikut horizontal scroll. */
+.tree-viewport {
+  position: relative;
+  overflow: auto;
+  max-height: 520px;
+  border: 2px solid var(--color-border);
+  border-radius: var(--radius-md);
+  background:
+    linear-gradient(var(--color-bg) 0%, var(--color-bg) 100%),
+    repeating-linear-gradient(0deg, transparent, transparent 39px, rgba(0,0,0,0.02) 40px);
+  padding: 24px;
+}
+
+.tree-canvas {
+  position: relative;
+  display: inline-flex; /* shrink-to-fit konten supaya forest tidak melar penuh lebar viewport */
+  transform-origin: top left;
+  transition: transform 150ms ease;
+}
+
+.tree-connectors-svg {
+  position: absolute;
+  top: 0;
+  left: 0;
+  pointer-events: none;
+  z-index: 0;
+}
+.tree-connector-line {
+  stroke: var(--color-sky);
+  stroke-width: 2;
+}
+
+.tree-forest {
+  position: relative;
+  z-index: 1;
+  display: flex;
+  gap: 48px;
+  align-items: flex-start;
+}
+
+/* Requirement 1/4: 1 cross-block = 1 level LENGKAP (parents -> cross -> children) */
+.cross-block {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 4px;
+}
+
+.cross-block__parents {
+  display: flex;
+  gap: 20px;
+}
+
+/* Requirement 3: cross adalah junction eksplisit, bukan parent nempel langsung ke child */
+.cross-block__cross-node {
+  width: 30px;
+  height: 30px;
+  border-radius: 50%;
+  border: 2px solid var(--color-accent);
+  background: var(--color-surface);
+  color: var(--color-accent-dark);
+  font-weight: 700;
+  font-size: 1rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  margin: 6px 0;
+  transition: transform var(--transition-base), box-shadow var(--transition-base);
+}
+.cross-block__cross-node:hover { transform: scale(1.12); box-shadow: var(--shadow-soft); }
+
+.cross-block__children {
+  display: flex;
+  gap: 18px;
+  align-items: flex-start;
+}
+
+.cross-block__child-slot {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 4px;
+}
+/* Cross lanjutan yang bersarang di bawah 1 child spesifik -> diberi jarak &
+   garis tipis supaya jelas ini "level generasi berikutnya", bukan sibling biasa */
+.cross-block__child-slot .cross-block {
+  margin-top: 14px;
+  padding-top: 14px;
+  border-top: 2px dashed var(--color-border);
+}
+
+.tree-individual {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 2px;
+  width: 68px;
+  padding: 6px 4px;
+  border: 2px solid var(--color-border);
+  border-radius: var(--radius-md);
+  background: var(--color-surface);
+  cursor: pointer;
+  transition: border-color var(--transition-base), box-shadow var(--transition-base), transform var(--transition-base);
+}
+.tree-individual--compact { width: 58px; padding: 4px 3px; }
+.tree-individual:hover,
+.tree-individual.is-hover {
+  transform: translateY(-2px);
+  border-color: var(--color-sky);
+  box-shadow: var(--shadow-soft);
+}
+.tree-individual.is-selected {
+  border-color: var(--color-accent);
+  box-shadow: 0 0 0 2px var(--color-accent);
+}
+.tree-individual__icon { width: 30px; height: 30px; }
+.tree-individual__gen { font-size: 0.6rem; font-weight: 700; color: var(--color-text-muted); }
+.tree-individual__geno { font-family: "Courier New", monospace; font-weight: 700; font-size: 0.78rem; }
+.tree-individual__debug {
+  font-size: 0.56rem;
+  color: var(--color-text-muted);
+  background: var(--color-bg);
+  border-radius: 4px;
+  padding: 2px 4px;
+  margin-top: 2px;
+  line-height: 1.3;
+  word-break: break-all;
+}
+
+/* Requirement 11: panel info saat node diklik */
+.tree-node-info {
+  position: relative;
+  margin-top: 12px;
+  padding: 14px 40px 14px 16px;
+  border: 2px solid var(--color-primary);
+  background: var(--color-primary-light);
+  border-radius: var(--radius-md);
+  font-size: 0.85rem;
+}
+.tree-node-info[hidden] { display: none; }
+.tree-node-info h4 { margin: 0 0 6px; font-family: var(--font-display); color: var(--color-primary-dark); }
+.tree-node-info p { margin: 0 0 6px; }
+.tree-node-info__close {
+  position: absolute;
+  top: 8px;
+  right: 10px;
+  background: transparent;
+  border: none;
+  font-size: 0.9rem;
+  cursor: pointer;
+  color: var(--color-text-muted);
+}
+
+@media (max-width: 600px) {
+  .tree-viewport { max-height: 380px; padding: 14px; }
+  .tree-individual { width: 56px; }
+  .tree-individual--compact { width: 48px; }
+}
+
+/* ==========================================================================
+   EXPLAIN THIS RESULT (REVISI 18)
+   ========================================================================== */
+/* ==========================================================================
+   EXPLAIN THIS RESULT (REVISI 18 -> REVISI Panel Terpisah: sekarang panel
+   mandiri `.result-explanation`, full-width, grid-area & spacing-nya lihat
+   REVISI Jelaskan Hasil Ini di .simulator-layout. Card styling meniru
+   .academic-summary/.history-panel -- border 2px, radius-lg, padding
+   senada -- supaya sekelas panel lain, TIDAK lagi ikut menentukan tinggi
+   #results-section/Rasio Hasil. )
+   ========================================================================== */
+.result-explanation {
+  margin: 20px auto 0;
+  background: var(--color-surface);
+  border: 2px solid var(--color-border);
+  border-radius: var(--radius-lg);
+  padding: 18px 20px;
+}
+/* Tombol trigger sekarang jadi elemen PALING ATAS di dalam card sendiri
+   (bukan lagi di dalam kotak Rasio) -- margin-top dari base rule di bawah
+   tidak lagi diperlukan di posisi ini. */
+.result-explanation > .explain-trigger { margin-top: 0; }
+
+.explain-trigger { text-align: center; margin-top: 10px; }
+
+.explain-panel {
+  margin-top: 12px;
+  border: 2px solid var(--color-border);
+  border-radius: var(--radius-md);
+  padding: 16px;
+  background: var(--color-bg);
+}
+.explain-panel[hidden] { display: none; }
+/* REVISI (hindari "kotak di dalam kotak"): .explain-panel sekarang selalu
+   nested di dalam card `.result-explanation` yang sudah punya border+
+   background sendiri -- border/radius/background bawaannya di atas diganti
+   jadi garis pemisah tipis di sini supaya terasa satu panel yang menyatu,
+   bukan dua kotak bertumpuk. Konten & struktur di dalamnya (view-tabs,
+   explain-panel__content) sama sekali tidak berubah. */
+.result-explanation .explain-panel {
+  border: none;
+  border-top: 1px solid var(--color-border);
+  border-radius: 0;
+  padding: 14px 0 0;
+  background: transparent;
+}
+
+.explain-panel__content {
+  margin-top: 12px;
+  font-size: 0.85rem;
+  line-height: 1.6;
+}
+.explain-panel__content h5 { margin: 10px 0 4px; color: var(--color-primary-dark); font-size: 0.85rem; }
+.explain-panel__content ul { margin: 4px 0; padding-left: 18px; }
+
+/* ==========================================================================
+   ACADEMIC SUMMARY (REVISI 20)
+   ========================================================================== */
+/* ==========================================================================
+   ACADEMIC SUMMARY (REVISI 20 -> REVISI Panel Terpisah: sekarang panel
+   mandiri full-width, grid-area & spacing-nya lihat REVISI Punnett+Ratio
+   Full-Width di .simulator-layout. Styling card di bawah ini SENGAJA
+   meniru .history-panel/.activity-log-panel persis -- border 2px, radius-lg,
+   padding senada -- supaya "terasa sekelas" dengan panel Riwayat seperti
+   yang diminta, bukan lagi terasa jadi child kecil dari Rasio Hasil. Aksen
+   warna (background tint + border-left primary) dipertahankan sebagai
+   satu-satunya pembeda visual dari Riwayat, murni identitas konten. )
+   ========================================================================== */
+.academic-summary {
+  margin: 20px auto 0;
+  background: var(--color-primary-light);
+  border: 2px solid var(--color-border);
+  border-left: 4px solid var(--color-primary);
+  border-radius: var(--radius-lg);
+  padding: 18px 20px;
+}
+.academic-summary[hidden] { display: none; }
+.academic-summary p { margin: 8px 0 0; font-size: 0.9rem; line-height: 1.6; color: var(--color-text); }
+
+/* ==========================================================================
+   DASHBOARD PEMBELAJARAN (REVISI 19)
+   ========================================================================== */
+.dashboard-modal__box {
+  max-width: 640px;
+  width: 100%;
+  max-height: 85vh;
+  overflow-y: auto;
+  text-align: left;
+}
+.dashboard-modal__header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 16px;
+}
+.dashboard-modal__header h2 { font-size: 1.2rem; margin: 0; }
+
+.dashboard-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
+  gap: 12px;
+  margin-bottom: 20px;
+}
+.dashboard-stat {
+  background: var(--color-primary-light);
+  border-radius: var(--radius-md);
+  padding: 14px;
+  text-align: center;
+}
+.dashboard-stat__value {
+  font-family: var(--font-display);
+  font-weight: 800;
+  font-size: 1.6rem;
+  color: var(--color-primary-dark);
+  display: block;
+}
+.dashboard-stat__label { font-size: 0.72rem; color: var(--color-text-muted); }
+
+.dashboard-topics h3 { font-size: 0.9rem; margin: 0 0 8px; }
+.dashboard-topics__list { list-style: none; padding: 0; margin: 0; display: flex; flex-direction: column; gap: 6px; }
+.dashboard-topics__list li {
+  font-size: 0.82rem;
+  padding: 8px 12px;
+  background: var(--color-bg);
+  border-radius: var(--radius-sm);
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+/* ==========================================================================
+   UI/UX POLISH LAYER (Enterprise Academic) — REVISI Enhance Menyeluruh
+   --------------------------------------------------------------------------
+   PRINSIP LAYER INI (baca sebelum mengubah):
+   1. 100% presentation: warna, bayangan, state (hover/focus/active/disabled),
+      micro-interaction, dan animasi. TIDAK ada perubahan ukuran/padding yang
+      mempengaruhi tinggi-lebar komponen utama, jadi layout 5-row/4-column,
+      sidebar=crossing-box, Punnett|Rasio top&bottom align tetap persis.
+   2. Ditaruh PALING AKHIR di file supaya menang atas rule lama yang
+      spesifisitasnya sama, tanpa menghapus/menulis ulang rule yang sudah
+      tervalidasi. Semua nilai memakai token di :root (lihat DESIGN TOKENS).
+   3. Animasi hanya opacity + translateY kecil/scale ringan untuk feedback,
+      NEVER untuk posisi/alignment. Semua dimatikan lewat
+      prefers-reduced-motion di akhir blok ini.
+   4. Aman untuk Challenge Mode: tidak ada animasi/state yang menampilkan
+      konten yang sedang [hidden] — semuanya hanya berjalan ketika elemen
+      SUDAH ditampilkan oleh logic (atribut hidden dilepas / :has() rule di
+      atas tidak lagi menyembunyikannya).
+   ========================================================================== */
+
+::selection { background: rgba(46, 125, 50, 0.22); }
+html { scroll-behavior: smooth; }
+
+/* ---- Tipografi: judul panel memakai font body (Inter) supaya terasa
+   akademik/rapi; Baloo 2 dipertahankan untuk identitas (judul aplikasi,
+   judul layar & topbar) ---- */
+.sidebar__title,
+.workflow-stage__title,
+.generation-timeline__title,
+.learning-checklist__title,
+.challenge-panel__title,
+.history-panel__title,
+.activity-log-panel__title,
+.education-panel__title {
+  font-family: var(--font-body);
+  font-weight: 700;
+  letter-spacing: -0.005em;
+}
+
+/* ---- Buttons: hierarki PRIMARY / SECONDARY / TERTIARY / DESTRUCTIVE ---- */
+.btn { letter-spacing: 0.005em; }
+.btn:focus-visible { outline: 3px solid var(--color-accent); outline-offset: 2px; }
+.btn:active:not(:disabled) {
+  transform: translateY(0) scale(0.98);
+  transition-duration: var(--transition-fast);
+}
+
+/* Primary */
+.btn--primary:active:not(:disabled) { background: var(--color-accent-dark); box-shadow: var(--shadow-xs); }
+.btn--primary:disabled {
+  background: var(--color-disabled-bg);
+  color: var(--color-disabled-text);
+  box-shadow: inset 0 0 0 1px rgba(0, 0, 0, 0.06);
+}
+
+/* Secondary (outline hijau) */
+.btn--ghost { background: var(--color-surface); }
+.btn--ghost:hover:not(:disabled) { box-shadow: var(--shadow-xs); }
+.btn--ghost:active:not(:disabled) { background: #D4ECD7; }
+.btn--ghost:disabled,
+.btn--ghost[disabled] {
+  opacity: 0.55;
+  cursor: not-allowed;
+  background: transparent;
+  border-color: var(--color-border);
+  box-shadow: none;
+}
+.btn--ghost:disabled:hover { background: transparent; border-color: var(--color-border); }
+
+/* Tertiary (aksi kecil) */
+.btn--small { font-size: var(--text-small); }
+
+/* Destructive (Reset) */
+.btn--danger { color: var(--color-danger); border-color: rgba(179, 38, 30, 0.35); }
+.btn--danger:hover:not(:disabled) { background: var(--color-danger-bg); border-color: var(--color-danger); }
+.btn--danger:active:not(:disabled) { background: #F9D9D6; }
+
+/* Aksi utama "Silangkan": focal point, tanpa glow berlebihan. Saat tombol
+   baru menjadi aktif (kedua induk lengkap) ring lembut berdenyut 2x lalu
+   berhenti — sinyal "siap", bukan animasi terus-menerus. */
+.btn--cross { box-shadow: var(--shadow-md); }
+/* REVISI (Animation Fix): 1 iterasi (bukan 2) -- instruksi eksplisit "SATU
+   KALI subtle attention animation, BUKAN infinite/repeated". Dua iterasi
+   sebelumnya bisa terbaca sebagai "berdenyut terus", bukan satu sinyal
+   "siap" yang jelas. */
+.btn--cross:not(:disabled) { animation: crossReady 1s var(--ease-standard) 1; }
+@keyframes crossReady {
+  0%   { box-shadow: var(--shadow-md), 0 0 0 0 rgba(255, 138, 61, 0.5); }
+  70%  { box-shadow: var(--shadow-md), 0 0 0 12px rgba(255, 138, 61, 0); }
+  100% { box-shadow: var(--shadow-md), 0 0 0 0 rgba(255, 138, 61, 0); }
+}
+
+/* ---- Elevasi panel: satu skala tipis untuk semua kartu/panel ---- */
+.sidebar,
+.generation-timeline,
+.learning-checklist,
+.history-panel,
+.activity-log-panel,
+.education-panel,
+.result-explanation,
+.academic-summary,
+.workflow-stage--punnett,
+.workflow-stage--results {
+  box-shadow: var(--shadow-xs);
+}
+
+/* ---- Crossing Box = focal point utama (border + elevasi sedikit lebih kuat).
+   Border tetap 2px -> tinggi & alignment tidak berubah. State "siap silang"
+   ditandai border hijau + ring tipis murni lewat CSS :has() pada tombol. ---- */
+.crossing-box {
+  border-color: var(--color-border-strong);
+  box-shadow: var(--shadow-md);
+  transition: border-color var(--transition-normal), box-shadow var(--transition-normal);
+}
+.crossing-box:has(#btn-cross:not(:disabled)) {
+  border-color: var(--color-primary);
+  box-shadow: var(--shadow-md), 0 0 0 3px rgba(46, 125, 50, 0.12);
+}
+/* Konektor vertikal kecil parent -> aksi silang, menempati gap yang sudah ada
+   (absolute di dalam elemen itu sendiri, tidak menambah tinggi). */
+.garden__cross-action { position: relative; }
+.garden__cross-action::before {
+  content: "";
+  position: absolute;
+  top: -16px;
+  left: calc(50% - 1px);
+  width: 2px;
+  height: 12px;
+  border-radius: 2px;
+  background: var(--color-border-strong);
+  transition: background var(--transition-normal);
+}
+.crossing-box:has(#btn-cross:not(:disabled)) .garden__cross-action::before { background: var(--color-primary); }
+/* Feedback tekan "Silangkan": kedua induk terisi ikut menyala sesaat */
+.crossing-box:has(.btn--cross:active:not(:disabled)) .drop-slot__content.is-filled {
+  border-color: var(--color-accent);
+  box-shadow: 0 0 0 4px rgba(255, 138, 61, 0.22);
+}
+
+/* ---- Slot induk: state jelas (idle / placeable / dragover / filled) ---- */
+.drop-slot__content {
+  transition: border-color var(--transition-normal), background var(--transition-normal),
+    transform var(--transition-normal), min-width var(--transition-normal), box-shadow var(--transition-normal);
+}
+.drop-slot__content.is-dragover { transform: scale(1.02); box-shadow: 0 0 0 4px rgba(255, 138, 61, 0.2); }
+.drop-slot__content.is-filled { box-shadow: var(--shadow-sm); }
+
+/* ---- Parent Card (pool sidebar) ---- */
+.genotype-item {
+  border-color: rgba(46, 125, 50, 0.14);
+  box-shadow: var(--shadow-xs);
+}
+.genotype-item:hover {
+  transform: translateY(-1px);
+  border-color: var(--color-primary);
+  box-shadow: var(--shadow-sm);
+}
+.genotype-item:active { cursor: grabbing; }
+.genotype-item.is-dragging { opacity: 0.55; transform: scale(0.97); box-shadow: var(--shadow-md); }
+.genotype-item.is-selected {
+  border-color: var(--color-accent);
+  background: rgba(255, 138, 61, 0.12);
+  box-shadow: 0 0 0 2px rgba(255, 138, 61, 0.35);
+}
+.genotype-item[aria-disabled="true"],
+.genotype-item.is-locked,
+.is-locked-by-challenge .genotype-item {
+  cursor: not-allowed;
+}
+
+/* ---- Offspring Card ---- */
+.child-card { box-shadow: var(--shadow-xs); }
+.child-card:hover { transform: translateY(-2px); box-shadow: var(--shadow-md); }
+.child-card:active { cursor: grabbing; transform: translateY(0); }
+.child-card.is-selected { box-shadow: 0 0 0 2px var(--color-accent), var(--shadow-sm); }
+
+/* ---- Reveal berurutan setelah "Silangkan" (offspring -> Punnett -> Rasio ->
+   Penjelasan -> Ringkasan). Semuanya berjalan HANYA saat elemen berubah dari
+   [hidden] ke tampil, jadi logic tetap instan & Challenge Mode tidak bocor
+   (elemen yang masih tersembunyi tidak menjalankan animasi apa pun).
+   REVISI (Animation Fix — Root Cause #3): delay tiap tahap SEBELUMNYA
+   terlalu rapat (140/240/340/420ms, selisih cuma ~100ms) sehingga ke-4
+   tahap nyaris tumpang-tindih dalam <600ms -- user tidak sempat menangkap
+   "satu per satu"-nya, terasa seperti satu ledakan/instan. Sekarang jarak
+   antar tahap diperlebar (~180-190ms) dan durasi tiap panel diperpanjang
+   ke 380ms (masuk rentang "panel reveal 300-500ms"), sehingga tiap tahap
+   punya jendela waktu sendiri yang jelas terlihat sebelum tahap berikutnya
+   mulai. Total sequence akhir ~950ms -- cukup lambat untuk terlihat,
+   cukup cepat untuk tetap terasa responsif. */
+#punnett-wrapper       { animation: workflowStageIn 380ms var(--ease-out) 160ms backwards; }
+#results-section       { animation: workflowStageIn 380ms var(--ease-out) 380ms backwards; }
+#result-explanation,
+#academic-summary {
+  animation: workflowStageIn 380ms var(--ease-out) backwards;
+}
+#result-explanation    { animation-delay: 560ms; }
+#academic-summary      { animation-delay: 740ms; }
+.workflow-connector:not([hidden]) { animation: connectorFlow 420ms var(--ease-out) 40ms backwards; }
+@keyframes connectorFlow {
+  from { opacity: 0; transform: translateY(-6px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+/* ---- Punnett: sel muncul mengikuti diagonal (baris+kolom).
+   REVISI (Animation Fix — Root Cause #3): keyframe SEBELUMNYA ikut
+   menganimasikan `opacity` (0->1) BERSAMAAN dengan panel induk
+   (#punnett-wrapper) yang JUGA menganimasikan opacity-nya sendiri di
+   waktu yang tumpang tindih. Opacity anak x opacity induk = opacity
+   gabungan yang naik SANGAT tidak linear (nyaris 0 untuk sebagian besar
+   durasi, lalu melompat tampak jelas hanya di ~100ms terakhir) -- inilah
+   sumber kesan "flicker"/"muncul mendadak" pada Punnett & Rasio. Diperbaiki
+   dengan memisahkan tanggung jawab: PANEL (induk) yang memegang opacity,
+   SEL (anak) HANYA beranimasi `transform` (scale) tanpa opacity sendiri --
+   jadi tidak ada perkalian opacity sama sekali, gerakan diagonal sel tetap
+   terlihat jelas karena hanya bergantung pada satu sumber animasi. */
+.punnett-table th { font-family: var(--font-mono); box-shadow: var(--shadow-xs); }
+.punnett-table td { box-shadow: var(--shadow-xs); }
+.punnett-table td, .punnett-table th {
+  animation: cellPop 300ms var(--ease-out) calc(200ms + (var(--r, 0) + var(--c, 0)) * 35ms) backwards;
+}
+@keyframes cellPop {
+  from { transform: scale(0.9); }
+  to { transform: scale(1); }
+}
+.punnett-table tr:nth-child(1) { --r: 0; }
+.punnett-table tr:nth-child(2) { --r: 1; }
+.punnett-table tr:nth-child(3) { --r: 2; }
+.punnett-table tr:nth-child(4) { --r: 3; }
+.punnett-table tr:nth-child(n+5) { --r: 4; }
+.punnett-table :is(td, th):nth-child(1) { --c: 0; }
+.punnett-table :is(td, th):nth-child(2) { --c: 1; }
+.punnett-table :is(td, th):nth-child(3) { --c: 2; }
+.punnett-table :is(td, th):nth-child(4) { --c: 3; }
+.punnett-table :is(td, th):nth-child(n+5) { --c: 4; }
+
+/* ---- Rasio: baris hover + muncul berurutan. REVISI (Animation Fix —
+   Root Cause #3): sama seperti Punnett -- keyframe baris SEKARANG hanya
+   `transform` (translateY), opacity murni tanggung jawab panel
+   #results-section (lihat REVISI di atas), tidak ada lagi opacity ganda
+   yang saling mengalikan antara panel & baris. */
+.ratio-list > .ratio-row { border-radius: var(--radius-sm); transition: background var(--transition-fast); }
+.ratio-list > .ratio-row:hover { background: rgba(255, 255, 255, 0.7); }
+.ratio-list > .ratio-row {
+  animation: rowSlide 300ms var(--ease-out) calc(420ms + var(--i, 0) * 45ms) backwards;
+}
+@keyframes rowSlide {
+  from { transform: translateY(7px); }
+  to { transform: translateY(0); }
+}
+.ratio-list > .ratio-row:nth-child(1) { --i: 0; }
+.ratio-list > .ratio-row:nth-child(2) { --i: 1; }
+.ratio-list > .ratio-row:nth-child(3) { --i: 2; }
+.ratio-list > .ratio-row:nth-child(4) { --i: 3; }
+.ratio-list > .ratio-row:nth-child(5) { --i: 4; }
+.ratio-list > .ratio-row:nth-child(6) { --i: 5; }
+.ratio-list > .ratio-row:nth-child(7) { --i: 6; }
+.ratio-list > .ratio-row:nth-child(8) { --i: 7; }
+.ratio-list > .ratio-row:nth-child(n+9) { --i: 8; }
+
+/* ---- Jelaskan Hasil Ini: pemicu ringkas + buka halus + terbaca nyaman ---- */
+.explain-trigger:has(+ .explain-panel:not([hidden])) .btn {
+  background: var(--color-primary-light);
+  border-color: var(--color-primary);
+}
+.explain-panel:not([hidden]) { animation: panelReveal 260ms var(--ease-out) both; }
+@keyframes panelReveal {
+  from { opacity: 0; transform: translateY(-6px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+.explain-panel__content { max-width: 84ch; margin-inline: auto; line-height: 1.7; }
+.explain-panel__content h5 { font-family: var(--font-body); letter-spacing: 0.01em; }
+
+/* ---- Ringkasan Akademik: judul rata kiri, teks nyaman dibaca ---- */
+.academic-summary .workflow-stage__title { text-align: left; margin: 0 0 4px; font-size: var(--text-title); }
+.academic-summary p { max-width: 96ch; line-height: 1.75; font-size: var(--text-body); text-wrap: pretty; }
+
+/* ---- Learning Mode: langkah selesai / sedang / terkunci lebih jelas ---- */
+.learning-checklist { border-left: 5px solid var(--color-primary); box-shadow: var(--shadow-xs); }
+.learning-checklist__item {
+  border: 1px solid transparent;
+  transition: background var(--transition-normal), border-color var(--transition-normal), opacity var(--transition-normal);
+}
+.learning-checklist__item[data-state="done"] { background: var(--color-surface-muted); }
+.learning-checklist__item[data-state="active"] {
+  border-color: var(--color-primary);
+  box-shadow: var(--shadow-xs);
+}
+.learning-checklist__item[data-state="locked"] { opacity: 0.55; }
+.learning-checklist__progress-fill { transition: width var(--transition-slow); }
+.learning-guided-note { box-shadow: var(--shadow-xs); }
+
+/* ---- Challenge Mode: identitas evaluatif (aksen oranye tegas, beda dari
+   Learning hijau & Sandbox netral). Hanya border-kiri lebih tebal — ukuran
+   panel tetap. Feedback muncul halus SETELAH logic menampilkannya. ---- */
+.challenge-panel, .challenge-level-select { border-left-width: 6px; box-shadow: var(--shadow-sm); }
+.challenge-feedback:not([hidden]) { animation: panelReveal 260ms var(--ease-out) both; }
+.challenge-lock-hint { transition: background var(--transition-normal), color var(--transition-normal); }
+.challenge-final-result:not([hidden]) { animation: panelReveal 320ms var(--ease-out) both; }
+
+/* ---- Riwayat Generasi & Pohon ---- */
+.timeline-track { scroll-snap-type: x proximity; }
+.timeline-node { scroll-snap-align: center; box-shadow: var(--shadow-xs); }
+.timeline-node:hover { border-color: var(--color-primary); box-shadow: var(--shadow-sm); }
+.timeline-node.is-active { box-shadow: 0 0 0 2px var(--color-accent), var(--shadow-sm); }
+.timeline-node:focus-visible,
+.tree-individual:focus-visible { outline: 3px solid var(--color-accent); outline-offset: 2px; }
+.tree-individual { transition: transform var(--transition-normal), box-shadow var(--transition-normal), border-color var(--transition-normal); }
+.tree-individual:hover { transform: translateY(-1px); box-shadow: var(--shadow-sm); }
+.view-tab { transition: background var(--transition-normal), color var(--transition-normal); }
+.view-tab:not(.is-active):hover { background: rgba(255, 255, 255, 0.7); }
+
+/* ---- Badge, toolbar seleksi, latar ---- */
+.badge { box-shadow: inset 0 0 0 1px rgba(0, 0, 0, 0.05); }
+.selection-toolbar { box-shadow: var(--shadow-sm); }
+/* Ilustrasi latar tetap BACKGROUND: sedikit diredam agar konten selalu jadi
+   fokus (aset tidak diganti, hanya opacity lapisan ::before). */
+.crossing-box::before { opacity: 0.9; }
+
+/* ---- Reduced motion: matikan animasi & delay stagger sepenuhnya.
+   (delay wajib di-nol-kan: fill-mode `backwards` akan menyembunyikan elemen
+   selama delay kalau delay masih ada.) ---- */
+@media (prefers-reduced-motion: reduce) {
+  html { scroll-behavior: auto; }
+  *, *::before, *::after {
+    animation-duration: 0.01ms !important;
+    animation-delay: 0s !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    transition-delay: 0s !important;
+  }
+}

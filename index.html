@@ -1,0 +1,520 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Simulator Genetika Mendel — Monohibrid</title>
+  <meta name="description" content="Simulator interaktif Hukum Mendel I: drag & drop persilangan genetika monohibrid (Bunga, Kacang Polong, Kupu-Kupu), menampilkan seluruh kombinasi Punnett Square." />
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Baloo+2:wght@500;700;800&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body>
+
+  <!-- ===================== HEADER ===================== -->
+  <header class="app-header">
+    <div class="app-header__brand">
+      <span class="app-header__icon" aria-hidden="true">🧬</span>
+      <span class="app-header__title">Simulator Genetika Mendel</span>
+    </div>
+    <p class="app-header__tagline">Belajar Hukum Mendel dengan menyilangkan langsung</p>
+  </header>
+
+  <!-- ===================== SETUP MENU (redesign: multi-step selection) ===================== -->
+  <main id="screen-species" class="screen screen--species" data-screen="species">
+    <div class="species-intro">
+      <h1 class="species-intro__title">Siapkan Eksperimenmu</h1>
+      <p class="species-intro__desc">
+        Susun konfigurasi simulasi genetikamu — pilih jenis persilangan, organisme, dan cara belajar
+        yang sesuai denganmu.
+      </p>
+    </div>
+
+    <!-- REVISI 1 (Initial Routing): opt-in murni — index/refresh SELALU ke menu
+         ini dulu, resume sesi lama HANYA terjadi jika user menekan tombol ini. -->
+    <div class="resume-session-banner" id="resume-session-banner" hidden role="status">
+      <span>💾 Ditemukan sesi simulasi yang belum selesai.</span>
+      <div class="resume-session-banner__actions">
+        <button type="button" id="btn-resume-session" class="btn btn--primary btn--small">Lanjutkan Sesi Sebelumnya</button>
+        <button type="button" id="btn-dismiss-resume" class="btn btn--ghost btn--small">Mulai Baru</button>
+      </div>
+    </div>
+
+    <!-- Progress indicator: murni informatif, bukan wizard berhalaman -->
+    <div class="setup-progress" aria-hidden="true">
+      <span class="setup-progress__step is-active" id="progress-step-1">01 Persilangan</span>
+      <span class="setup-progress__connector">──●──</span>
+      <span class="setup-progress__step" id="progress-step-2">02 Organisme</span>
+      <span class="setup-progress__connector">──○──</span>
+      <span class="setup-progress__step" id="progress-step-3">03 Mode</span>
+    </div>
+
+    <!-- ===================== STEP 1: JENIS PERSILANGAN ===================== -->
+    <section class="setup-step" aria-labelledby="setup-step1-title">
+      <h2 class="setup-step__title" id="setup-step1-title">Apa yang ingin kamu pelajari?</h2>
+      <div class="inheritance-grid" id="inheritance-grid" role="radiogroup" aria-label="Pilih jenis persilangan">
+        <!-- di-render oleh MenuManager dari SIMULATION_CONFIG.inheritanceTypes -->
+      </div>
+    </section>
+
+    <!-- ===================== STEP 2: ORGANISME ===================== -->
+    <section class="setup-step" aria-labelledby="setup-step2-title">
+      <h2 class="setup-step__title" id="setup-step2-title">Pilih organisme</h2>
+      <div class="species-grid" id="species-grid" role="radiogroup" aria-label="Pilih spesies">
+        <!-- di-render oleh MenuManager dari SIMULATION_CONFIG.speciesCatalog -->
+      </div>
+    </section>
+
+    <!-- ===================== STEP 3: MODE BELAJAR ===================== -->
+    <section class="setup-step" aria-labelledby="setup-step3-title">
+      <h2 class="setup-step__title" id="setup-step3-title">Pilih cara belajar</h2>
+      <div class="mode-selector" id="mode-selector" role="radiogroup" aria-label="Pilih mode penggunaan">
+        <!-- di-render oleh MenuManager dari SIMULATION_CONFIG.modes -->
+      </div>
+    </section>
+
+    <!-- ===================== SUMMARY + START ===================== -->
+    <div class="setup-summary" id="setup-summary">
+      <h3 class="setup-summary__title">Simulasi Anda</h3>
+      <dl class="setup-summary__list" id="setup-summary-list">
+        <div class="setup-summary__row"><dt>Persilangan</dt><dd id="summary-inheritance">—</dd></div>
+        <div class="setup-summary__row"><dt>Organisme</dt><dd id="summary-species">—</dd></div>
+        <div class="setup-summary__row"><dt>Sifat</dt><dd id="summary-trait">—</dd></div>
+        <div class="setup-summary__row"><dt>Mode</dt><dd id="summary-mode">—</dd></div>
+      </dl>
+      <button type="button" id="btn-start-simulation" class="btn btn--primary btn--start-simulation" disabled>
+        <span aria-hidden="true">✨</span> Mulai Simulasi
+      </button>
+      <p class="setup-summary__hint" id="setup-summary-hint" role="status">Lengkapi pilihan di atas untuk memulai.</p>
+    </div>
+
+    <button type="button" id="btn-open-dashboard" class="btn btn--ghost btn--dashboard-open">
+      <span aria-hidden="true">📊</span> Dashboard Pembelajaran
+    </button>
+  </main>
+
+  <!-- ===================== STEP 2: SIMULATOR ===================== -->
+  <main id="screen-simulator" class="screen screen--simulator" data-screen="simulator" hidden>
+
+    <div class="simulator-topbar">
+      <button type="button" id="btn-back" class="btn btn--ghost">
+        <span aria-hidden="true">←</span> Kembali
+      </button>
+      <h2 class="simulator-topbar__title" id="simulator-species-title">Bunga — Warna Daun</h2>
+      <span class="badge badge--mode" id="mode-indicator-badge">🎓 Mode Belajar</span>
+      <div class="topbar-actions">
+        <button type="button" id="btn-undo" class="btn btn--ghost btn--icon" aria-label="Urungkan aksi terakhir (Ctrl+Z)" disabled>↶</button>
+        <button type="button" id="btn-redo" class="btn btn--ghost btn--icon" aria-label="Ulangi aksi yang diurungkan (Ctrl+Shift+Z)" disabled>↷</button>
+        <!-- ===================== BACKGROUND SELECTOR (Bagian 3 revisi) =====================
+             <details>/<summary> native supaya tidak perlu JS tambahan untuk buka/tutup panel;
+             daftar opsi tetap di-render dari BACKGROUNDS oleh BackgroundManager. -->
+        <details class="bg-selector" id="bg-selector">
+          <summary class="btn btn--ghost bg-selector__toggle" aria-label="Ganti latar simulasi">
+            <span aria-hidden="true">🖼</span> Latar
+          </summary>
+          <div class="bg-selector__panel" id="background-selector-list" role="radiogroup" aria-label="Pilih latar simulasi">
+            <!-- di-render oleh BackgroundManager dari BACKGROUNDS -->
+          </div>
+        </details>
+        <button type="button" id="btn-reset" class="btn btn--ghost btn--danger" aria-label="Reset seluruh simulasi ke kondisi awal">
+          <span aria-hidden="true">⟲</span> Reset Simulasi
+        </button>
+      </div>
+    </div>
+
+    <!-- ===================== CATATAN MODEL SEDERHANA (edukasi) ===================== -->
+    <p class="simplified-model-note">
+      🧪 Simulasi ini menggunakan model pewarisan Mendel sederhana untuk tujuan pembelajaran.
+    </p>
+
+    <!-- ===================== LEARNING CHECKLIST (REVISI 15) ===================== -->
+    <section id="learning-checklist" class="learning-checklist" hidden aria-label="Checklist mode belajar">
+      <h3 class="learning-checklist__title">🎓 Langkah Mode Belajar</h3>
+      <div class="learning-checklist__progress-bar"><div class="learning-checklist__progress-fill" id="learning-progress-fill"></div></div>
+      <ol class="learning-checklist__list" id="learning-checklist-list"></ol>
+    </section>
+
+    <!-- ===================== SELECTION MODE TOOLBAR (REVISI 13 -> REVISI Posisi:
+         dipindah ke SETELAH #generation-timeline / "Riwayat Generasi", lihat blok
+         itu di bawah — id, isi, dan fungsi tombol SAMA PERSIS, hanya posisi DOM
+         yang berubah agar urutan visual "info dipilih -> riwayat generasi ->
+         aksi jadikan induk" terasa lebih natural). ===================== -->
+
+    <!-- ===================== CHALLENGE MODE — LEVEL SELECTION (REVISI) =====================
+         Ditampilkan saat AppState.challengeState.screen === 'level-select' (konteks Challenge
+         AKTIF tapi belum ada sesi soal). Parent/pool TETAP terkunci selama panel ini tampil
+         (lihat ChallengeManager.applyContextLocks()) — mencegah "Akhiri Sesi" merosot menjadi
+         Sandbox bebas. Kartu level di-render dari CHALLENGE_LEVELS oleh ChallengeManager. -->
+    <section id="challenge-level-select" class="challenge-level-select" hidden aria-label="Pilih level tantangan">
+      <h3 class="challenge-panel__title">🎯 Pilih Level Tantangan</h3>
+      <p class="challenge-panel__hint">Setiap level punya kumpulan soal sendiri yang diacak setiap kali dimainkan — pilih satu untuk memulai sesi.</p>
+      <div class="option-grid" id="challenge-level-grid" role="radiogroup" aria-label="Level tantangan">
+        <!-- kartu level di-render oleh ChallengeManager.renderLevelSelect() -->
+      </div>
+    </section>
+
+    <!-- ===================== CHALLENGE MODE (REVISI: identitas evaluatif tegas) ===================== -->
+    <section id="challenge-panel" class="challenge-panel" hidden aria-label="Tantangan genetika">
+      <div class="challenge-panel__header">
+        <h3 class="challenge-panel__title">🎯 Tantangan Genetika</h3>
+        <span class="badge badge--accent" id="challenge-level-badge">Level 1 — Dasar</span>
+        <span class="badge badge--accent" id="challenge-progress-badge">Tantangan 1 dari 3</span>
+        <span class="badge badge--score" id="challenge-score-badge">Benar: 0 · Salah: 0</span>
+      </div>
+      <p class="challenge-panel__objective" id="challenge-prompt">Silangkan: AA × Aa</p>
+      <p class="challenge-panel__hint">Prediksi hasilnya SEBELUM menekan tombol Silangkan di atas. Induk sudah dikunci sesuai tantangan — selesaikan tantangan ini untuk melanjutkan.</p>
+      <p class="challenge-lock-hint is-locked" id="challenge-lock-hint" role="status">🔒 Silakan pilih jawaban lalu kunci jawaban sebelum melakukan persilangan.</p>
+
+      <div class="challenge-panel__questions">
+        <div class="challenge-question-group">
+          <span class="challenge-question-group__label">Rasio Genotipe:</span>
+          <div class="challenge-question-rows" id="challenge-genotype-rows"></div>
+        </div>
+        <div class="challenge-question-group">
+          <span class="challenge-question-group__label">Rasio Fenotipe:</span>
+          <div class="challenge-question-rows" id="challenge-phenotype-rows"></div>
+        </div>
+      </div>
+
+      <div class="challenge-panel__actions">
+        <button type="button" id="btn-challenge-submit" class="btn btn--primary btn--small">Kunci Jawaban</button>
+        <button type="button" id="btn-challenge-exit" class="btn btn--ghost btn--small">Akhiri Sesi</button>
+      </div>
+
+      <div class="challenge-feedback" id="challenge-feedback" hidden></div>
+
+      <!-- Hasil akhir sesi (muncul setelah seluruh tantangan selesai) -->
+      <div class="challenge-final-result" id="challenge-final-result" hidden>
+        <h4>🏁 Sesi Tantangan Selesai</h4>
+        <p id="challenge-final-summary"></p>
+        <button type="button" id="btn-challenge-back-to-levels" class="btn btn--primary btn--small">Kembali ke Pilihan Level</button>
+      </div>
+    </section>
+
+    <!-- ===================== INFO MODE BELAJAR (Learning: guided, bukan evaluasi) ===================== -->
+    <section id="learning-guided-note" class="learning-guided-note" hidden aria-label="Catatan mode belajar">
+      <p>📖 Kamu sedang dalam <strong>Mode Belajar</strong> — bereksperimenlah sebebas mungkin, tidak ada penilaian di sini. Ikuti panduan di bawah untuk memahami setiap konsep.</p>
+    </section>
+
+    <!-- ===================== GENERATION TIMELINE / TREE (REVISI 12 & 17) ===================== -->
+    <section id="generation-timeline" class="generation-timeline" hidden aria-label="Riwayat visual generasi persilangan">
+      <div class="generation-timeline__header">
+        <h3 class="generation-timeline__title">🧬 Riwayat Generasi</h3>
+        <div class="view-tabs" role="tablist" aria-label="Tampilan riwayat generasi">
+          <button type="button" class="view-tab is-active" id="tab-timeline" role="tab" aria-selected="true">Linimasa</button>
+          <button type="button" class="view-tab" id="tab-tree" role="tab" aria-selected="false">Pohon Keturunan</button>
+        </div>
+      </div>
+      <div class="timeline-track" id="timeline-track" role="list"></div>
+
+      <!-- ===================== GENERATION TREE (pedigree, bukan Timeline) ===================== -->
+      <div class="generation-tree-wrap" id="generation-tree-wrap" hidden>
+        <div class="tree-toolbar">
+          <span class="tree-toolbar__hint">Pohon menunjukkan <strong>siapa keturunan siapa</strong> — klik node untuk detail.</span>
+          <div class="tree-toolbar__controls">
+            <button type="button" id="tree-zoom-out" class="btn btn--ghost btn--icon" aria-label="Perkecil pohon">−</button>
+            <button type="button" id="tree-zoom-reset" class="btn btn--ghost btn--small" aria-label="Reset zoom pohon">100%</button>
+            <button type="button" id="tree-zoom-in" class="btn btn--ghost btn--icon" aria-label="Perbesar pohon">+</button>
+            <button type="button" id="tree-debug-toggle" class="btn btn--ghost btn--small" aria-pressed="false">🐞 Debug</button>
+          </div>
+        </div>
+
+        <div class="tree-viewport" id="tree-viewport">
+          <div class="tree-canvas" id="tree-canvas">
+            <!-- node pedigree di-render di sini oleh GenerationTreeManager -->
+            <svg id="tree-connectors-svg" class="tree-connectors-svg" aria-hidden="true"></svg>
+          </div>
+        </div>
+
+        <div class="tree-node-info" id="tree-node-info" hidden role="status">
+          <button type="button" class="tree-node-info__close" id="tree-node-info-close" aria-label="Tutup info">✕</button>
+          <div id="tree-node-info-content"></div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ===================== SELECTION MODE TOOLBAR (REVISI 13 -> REVISI Posisi:
+         dipindah ke sini, SETELAH "Riwayat Generasi" di atas — id, isi, dan
+         fungsi tombol Jadikan Induk 1/2 SAMA PERSIS seperti sebelumnya, baik
+         untuk genotipe dari Sidebar Pool maupun dari kartu offspring, murni
+         posisi DOM yang berubah). ===================== -->
+    <div id="selection-toolbar" class="selection-toolbar" hidden role="status">
+      <span id="selection-toolbar__text" class="selection-toolbar__text">Genotipe dipilih:</span>
+      <button type="button" id="btn-select-parent1" class="btn btn--primary btn--small">Jadikan Induk 1</button>
+      <button type="button" id="btn-select-parent2" class="btn btn--primary btn--small">Jadikan Induk 2</button>
+    </div>
+
+    <div class="simulator-layout" aria-label="Ruang kerja simulasi: pool induk 1, alur persilangan, pool induk 2">
+
+      <!-- SIDEBAR KIRI: Parent 1 pool -->
+      <details class="sidebar sidebar--left" open>
+        <summary class="sidebar__title">Induk 1</summary>
+        <p class="sidebar__hint">Seret ke area "Induk 1", atau tekan Enter untuk memilih lalu Enter pada slotnya</p>
+        <ul class="genotype-pool" id="pool-parent1" data-parent-slot="parent1">
+          <!-- item genotype di-render oleh Renderer.js -->
+        </ul>
+      </details>
+
+      <!-- AREA TENGAH: satu alur workflow persilangan yang menyatu (REVISI 1) -->
+      <section class="cross-workflow" aria-label="Alur persilangan: induk, hasil anak, Punnett Square, dan rasio">
+
+        <!-- ===================== CROSSING BOX: Step 1 + Step 2 menyatu dalam 1 box ===================== -->
+        <div class="crossing-box">
+          <div class="workflow-stage workflow-stage--parents">
+            <h4 class="workflow-stage__title">1️⃣ Pilih & Silangkan Induk</h4>
+            <div class="garden">
+              <div class="garden__row garden__row--parents">
+                <div class="drop-slot drop-slot--parent1" id="slot-parent1" data-slot="parent1">
+                  <span class="drop-slot__label">Induk 1</span>
+                  <button type="button" class="remove-parent-btn" id="btn-remove-parent1" data-remove-slot="parent1" aria-label="Hapus Induk 1" hidden>✕</button>
+                  <div class="drop-slot__content" id="content-parent1" tabindex="0" role="button" aria-label="Slot Induk 1. Tekan Enter untuk menempatkan genotipe yang sedang dipilih">
+                    <span class="drop-slot__placeholder">Seret genotipe ke sini</span>
+                  </div>
+                </div>
+
+                <div class="drop-slot drop-slot--parent2" id="slot-parent2" data-slot="parent2">
+                  <span class="drop-slot__label">Induk 2</span>
+                  <button type="button" class="remove-parent-btn" id="btn-remove-parent2" data-remove-slot="parent2" aria-label="Hapus Induk 2" hidden>✕</button>
+                  <div class="drop-slot__content" id="content-parent2" tabindex="0" role="button" aria-label="Slot Induk 2. Tekan Enter untuk menempatkan genotipe yang sedang dipilih">
+                    <span class="drop-slot__placeholder">Seret genotipe ke sini</span>
+                  </div>
+                </div>
+              </div>
+
+              <div class="garden__cross-action">
+                <button type="button" id="btn-cross" class="btn btn--primary btn--cross" disabled aria-describedby="cross-hint">
+                  <span aria-hidden="true">✨</span> Silangkan
+                </button>
+                <p id="cross-hint" class="cross-hint" role="status">Isi kedua induk terlebih dahulu</p>
+              </div>
+            </div>
+          </div>
+
+          <div class="crossing-box__divider" role="separator" aria-hidden="true"></div>
+
+          <!-- ===================== STEP 2: HASIL ANAK (di dalam crossing box yang sama) ===================== -->
+          <div class="workflow-stage workflow-stage--children" id="children-section" hidden aria-label="Hasil anak">
+            <div class="workflow-stage__header">
+              <h4 class="workflow-stage__title">2️⃣ Hasil Anak</h4>
+              <span class="badge badge--accent" id="generation-badge" hidden>Generasi ke-1</span>
+            </div>
+            <p class="results-section__hint">Setiap kartu mewakili satu kotak Punnett Square. Arahkan kursor untuk melihat asalnya. Seret kartu untuk dijadikan induk generasi berikutnya.</p>
+
+            <div class="children-grid" id="children-grid" role="list">
+              <!-- kartu anak di-render oleh ChildManager -->
+            </div>
+
+            <!-- ===================== LEARNING GATE: Amati Hasil Anak (REVISI Learning Flow) =====================
+                 Teks diisi UIController.handleCross() -> LearningManager.presentCrossObservations()
+                 SEBELUM tombol ini terbuka (lihat applyLocks) -> tidak ada lagi ack tanpa konten. -->
+            <p class="learning-note" id="learning-note-children" hidden></p>
+            <button type="button" id="ack-children-review" class="btn btn--small btn--ghost learning-ack-btn" hidden>Mengerti, Lanjut →</button>
+          </div>
+        </div>
+
+        <div class="workflow-connector" id="connector-to-punnett" aria-hidden="true" hidden>↓</div>
+
+        <!-- ===================== POST-CROSS ROW: Punnett + Rasio berdampingan,
+             full workspace width (lihat REVISI Structural Fix di style.css) —
+             wrapper murni untuk layout, TIDAK mengubah id/struktur internal
+             #punnett-wrapper maupun #results-section sama sekali. ===================== -->
+        <div class="post-cross-row" id="post-cross-row">
+
+          <!-- ===================== STEP 3: PUNNETT SQUARE (box terpisah) ===================== -->
+          <div class="workflow-stage workflow-stage--punnett punnett-wrapper" id="punnett-wrapper" hidden aria-label="Papan Punnett">
+            <h4 class="workflow-stage__title">3️⃣ Papan Punnett</h4>
+            <table class="punnett-table" id="punnett-table" aria-label="Tabel Punnett Square hasil persilangan">
+              <tbody id="punnett-table-body">
+                <!-- di-render oleh PunnettRenderer.js -->
+              </tbody>
+            </table>
+
+            <!-- ===================== LEARNING GATE: Amati Papan Punnett ===================== -->
+            <p class="learning-note" id="learning-note-punnett" hidden></p>
+            <button type="button" id="ack-punnett-review" class="btn btn--small btn--ghost learning-ack-btn" hidden>Mengerti, Lanjut →</button>
+          </div>
+
+          <div class="workflow-connector" id="connector-to-results" aria-hidden="true" hidden>↓</div>
+
+          <!-- ===================== STEP 4: RASIO HASIL (box terpisah) ===================== -->
+          <div class="workflow-stage workflow-stage--results results-section" id="results-section" hidden aria-label="Rasio hasil persilangan">
+            <h4 class="workflow-stage__title">4️⃣ Rasio Hasil</h4>
+            <div class="ratio-summary" id="ratio-summary">
+              <div class="ratio-summary__col">
+                <h5>Rasio Genotipe</h5>
+                <div class="ratio-row ratio-row--header">
+                  <span class="ratio-row__label">Genotipe</span>
+                  <span class="ratio-row__count">Jumlah</span>
+                  <span class="ratio-row__percent">Persentase</span>
+                </div>
+                <ul class="ratio-list" id="ratio-genotype-list"></ul>
+              </div>
+              <div class="ratio-summary__col">
+                <h5>Rasio Fenotipe</h5>
+                <div class="ratio-row ratio-row--header">
+                  <span class="ratio-row__label">Fenotipe</span>
+                  <span class="ratio-row__count">Jumlah</span>
+                  <span class="ratio-row__percent">Persentase</span>
+                </div>
+                <ul class="ratio-list" id="ratio-phenotype-list"></ul>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- ===================== EXPLAIN THIS RESULT (REVISI 18 -> dipisah jadi
+             panel tersendiri, full workspace width, TIDAK lagi menentukan tinggi
+             #results-section) — id, isi, dan cara UIController mengisinya SAMA
+             PERSIS, hanya posisi DOM & pembungkus yang berubah (dulu anak
+             #results-section). ===================== -->
+        <div class="result-explanation" id="result-explanation" aria-label="Penjelasan hasil persilangan">
+          <div class="explain-trigger">
+            <button type="button" id="btn-explain-result" class="btn btn--ghost btn--small">
+              <span aria-hidden="true">💡</span> Jelaskan Hasil Ini
+            </button>
+          </div>
+          <div class="explain-panel" id="explain-panel" hidden>
+            <div class="view-tabs" role="tablist" aria-label="Tingkat penjelasan">
+              <button type="button" class="view-tab is-active" data-level="sd" role="tab" aria-selected="true">SD</button>
+              <button type="button" class="view-tab" data-level="smp" role="tab" aria-selected="false">SMP</button>
+              <button type="button" class="view-tab" data-level="sma" role="tab" aria-selected="false">SMA</button>
+            </div>
+            <div class="explain-panel__content" id="explain-panel-content"></div>
+          </div>
+        </div>
+
+        <!-- ===================== ACADEMIC SUMMARY (REVISI 20 -> dipisah jadi panel
+             tersendiri, full workspace width, lihat REVISI Structural Fix) —
+             id, isi, dan cara ChildManager mengisinya SAMA PERSIS, hanya posisi
+             DOM & class pembungkus yang berubah (dulu anak #results-section). ===================== -->
+        <div class="academic-summary" id="academic-summary" hidden aria-label="Ringkasan akademik">
+          <h4 class="workflow-stage__title">📄 Ringkasan Akademik</h4>
+          <p id="academic-summary-text"></p>
+        </div>
+      </section>
+
+      <!-- SIDEBAR KANAN: Parent 2 pool -->
+      <details class="sidebar sidebar--right" open>
+        <summary class="sidebar__title">Induk 2</summary>
+        <p class="sidebar__hint">Seret ke area "Induk 2", atau tekan Enter untuk memilih lalu Enter pada slotnya</p>
+        <ul class="genotype-pool" id="pool-parent2" data-parent-slot="parent2">
+          <!-- item genotype di-render oleh Renderer.js -->
+        </ul>
+      </details>
+    </div>
+
+    <!-- Live region: mengumumkan hasil persilangan & perubahan penting ke screen reader -->
+    <div id="sr-announcer" class="sr-only" aria-live="polite" role="status"></div>
+
+    <!-- ===================== PANEL EDUKASI ===================== -->
+    <section class="education-panel" id="education-panel" aria-label="Penjelasan proses genetika">
+      <h3 class="education-panel__title">📘 Apa yang Sedang Terjadi?</h3>
+
+      <ol class="education-steps" id="education-steps">
+        <li class="education-step" data-step="parent" data-active="false">
+          <span class="education-step__num">1</span>
+          <div class="education-step__body">
+            <strong>Induk dipilih</strong>
+            <p id="edu-parent-text">Belum ada induk yang dipilih.</p>
+            <button type="button" id="ack-parent-review" class="btn btn--small btn--ghost learning-ack-btn" hidden>Mengerti, Lanjut →</button>
+          </div>
+        </li>
+        <li class="education-step" data-step="gamete" data-active="false">
+          <span class="education-step__num">2</span>
+          <div class="education-step__body">
+            <strong>Pembentukan gamet</strong>
+            <p id="edu-gamete-text">—</p>
+            <button type="button" id="ack-gamete-review" class="btn btn--small btn--ghost learning-ack-btn" hidden>Mengerti, Lanjut →</button>
+          </div>
+        </li>
+        <li class="education-step" data-step="meeting" data-active="false">
+          <span class="education-step__num">3</span>
+          <div class="education-step__body">
+            <strong>Pertemuan gamet</strong>
+            <p id="edu-meeting-text">—</p>
+          </div>
+        </li>
+        <li class="education-step" data-step="zygote" data-active="false">
+          <span class="education-step__num">4</span>
+          <div class="education-step__body">
+            <strong>Pembentukan zigot</strong>
+            <p id="edu-zygote-text">—</p>
+          </div>
+        </li>
+        <li class="education-step" data-step="genotype" data-active="false">
+          <span class="education-step__num">5</span>
+          <div class="education-step__body">
+            <strong>Genotipe</strong>
+            <p id="edu-genotype-text">—</p>
+          </div>
+        </li>
+        <li class="education-step" data-step="phenotype" data-active="false">
+          <span class="education-step__num">6</span>
+          <div class="education-step__body">
+            <strong>Fenotipe</strong>
+            <p id="edu-phenotype-text">—</p>
+          </div>
+        </li>
+        <li class="education-step" data-step="ratio-genotype" data-active="false">
+          <span class="education-step__num">7</span>
+          <div class="education-step__body">
+            <strong>Rasio Genotipe</strong>
+            <p id="edu-ratio-genotype-text">—</p>
+            <button type="button" id="ack-ratio-genotype-review" class="btn btn--small btn--ghost learning-ack-btn" hidden>Mengerti, Lanjut →</button>
+          </div>
+        </li>
+        <li class="education-step" data-step="ratio-phenotype" data-active="false">
+          <span class="education-step__num">8</span>
+          <div class="education-step__body">
+            <strong>Rasio Fenotipe</strong>
+            <p id="edu-ratio-phenotype-text">—</p>
+            <button type="button" id="ack-ratio-phenotype-review" class="btn btn--small btn--ghost learning-ack-btn" hidden>Mengerti, Lanjut →</button>
+          </div>
+        </li>
+      </ol>
+    </section>
+
+    <!-- ===================== RIWAYAT PERSILANGAN ===================== -->
+    <section class="history-panel" id="history-panel" aria-label="Riwayat persilangan">
+      <h3 class="history-panel__title">📜 Riwayat Persilangan</h3>
+      <p class="history-panel__empty" id="history-empty-text">Belum ada persilangan yang dilakukan.</p>
+      <ol class="history-list" id="history-list"></ol>
+    </section>
+
+    <!-- ===================== RIWAYAT AKTIVITAS ===================== -->
+    <section class="activity-log-panel" id="activity-log-panel" aria-label="Riwayat aktivitas">
+      <h3 class="activity-log-panel__title">🕘 Riwayat Aktivitas</h3>
+      <p class="activity-log-panel__empty" id="activity-log-empty">Belum ada aktivitas.</p>
+      <ul class="activity-log-list" id="activity-log-list"></ul>
+    </section>
+  </main>
+
+  <!-- ===================== DIALOG KONFIRMASI GANTI PARENT ===================== -->
+  <div id="confirm-modal" class="confirm-modal" hidden role="alertdialog" aria-modal="true" aria-labelledby="confirm-modal-title">
+    <div class="confirm-modal__box">
+      <p id="confirm-modal-title">Slot ini sudah terisi. Ganti dengan genotipe baru?</p>
+      <div class="confirm-modal__actions">
+        <button type="button" id="confirm-modal-yes" class="btn btn--primary">Lanjutkan</button>
+        <button type="button" id="confirm-modal-cancel" class="btn btn--ghost">Batal</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- ===================== DASHBOARD PEMBELAJARAN (REVISI 19) ===================== -->
+  <div id="dashboard-modal" class="confirm-modal dashboard-modal" hidden role="dialog" aria-modal="true" aria-labelledby="dashboard-modal-title">
+    <div class="confirm-modal__box dashboard-modal__box">
+      <div class="dashboard-modal__header">
+        <h2 id="dashboard-modal-title">📊 Dashboard Pembelajaran</h2>
+        <button type="button" id="btn-close-dashboard" class="btn btn--ghost btn--icon" aria-label="Tutup dashboard">✕</button>
+      </div>
+      <div class="dashboard-grid" id="dashboard-grid"></div>
+      <div class="dashboard-topics">
+        <h3>Materi yang Sudah Dipelajari</h3>
+        <ul id="dashboard-topics-list" class="dashboard-topics__list"></ul>
+      </div>
+    </div>
+  </div>
+
+  <script src="script.js"></script>
+</body>
+</html>
